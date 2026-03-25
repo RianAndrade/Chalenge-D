@@ -174,6 +174,25 @@ class CowController extends AbstractController
             return $this->redirectToRoute('app_cow_slaughter_report');
         }
 
+        $existing = $this->repository->findOneAliveByCodeExcluding($cow->getCode(), $cow->getId());
+        if ($existing) {
+            $this->addFlash('error', 'Não é possível reverter: já existe um animal vivo com o código "' . $cow->getCode() . '".');
+
+            return $this->redirectToRoute('app_cow_slaughter_report');
+        }
+
+        $farm = $cow->getFarm();
+        if ($farm) {
+            $aliveCows = $this->repository->count(['farm' => $farm, 'slaughter' => null]);
+            $limit = (int) floor($farm->getSize() * \App\Entity\Farm::MAX_ANIMALS_PER_HECTARE);
+
+            if ($aliveCows >= $limit) {
+                $this->addFlash('error', 'Não é possível reverter: a fazenda "' . $farm->getName() . '" já atingiu a capacidade máxima de ' . $limit . ' animais.');
+
+                return $this->redirectToRoute('app_cow_slaughter_report');
+            }
+        }
+
         $cow->setSlaughter(null);
         $this->repository->save($cow, true);
         $this->addFlash('success', 'Abate revertido com sucesso. O animal voltou ao rebanho.');
