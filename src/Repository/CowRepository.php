@@ -68,6 +68,7 @@ class CowRepository extends ServiceEntityRepository
             ->orderBy('c.code', 'ASC');
     }
 
+
     public function findByFilters(array $filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
@@ -75,12 +76,12 @@ class CowRepository extends ServiceEntityRepository
             ->addSelect('f')
             ->orderBy('c.code', 'ASC');
 
-        if (!empty($filters['search'])) {
+        if (isset($filters['search']) && $filters['search'] !== '') {
             $qb->andWhere('c.code LIKE :search OR f.name LIKE :search')
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }
 
-        if (!empty($filters['farm'])) {
+        if (isset($filters['farm']) && $filters['farm'] !== '') {
             $qb->andWhere('f.id = :farmId')
                 ->setParameter('farmId', $filters['farm']);
         }

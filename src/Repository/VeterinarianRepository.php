@@ -40,12 +40,12 @@ class VeterinarianRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('v')
             ->orderBy('v.name', 'ASC');
 
-        if (!empty($filters['search'])) {
+        if (isset($filters['search']) && $filters['search'] !== '') {
             $qb->andWhere('v.name LIKE :search OR v.crmv LIKE :search')
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }
 
-        if (!empty($filters['farm'])) {
+        if (isset($filters['farm']) && $filters['farm'] !== '') {
             $qb->innerJoin('v.farms', 'f')
                 ->andWhere('f.id = :farmId')
                 ->setParameter('farmId', $filters['farm']);

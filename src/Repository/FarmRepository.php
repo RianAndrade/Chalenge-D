@@ -42,7 +42,7 @@ class FarmRepository extends ServiceEntityRepository
             ->addSelect('v')
             ->orderBy('f.name', 'ASC');
 
-        if (!empty($filters['search'])) {
+        if (isset($filters['search']) && $filters['search'] !== '') {
             $qb->andWhere('f.name LIKE :search OR f.manager LIKE :search')
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }
@@ -57,7 +57,7 @@ class FarmRepository extends ServiceEntityRepository
                 ->setParameter('sizeMax', (float) $filters['size_max']);
         }
 
-        if (!empty($filters['veterinarian'])) {
+        if (isset($filters['veterinarian']) && $filters['veterinarian'] !== '') {
             $qb->andWhere('v.id = :vetId')
                 ->setParameter('vetId', $filters['veterinarian']);
         }
