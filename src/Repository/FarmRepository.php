@@ -38,6 +38,8 @@ class FarmRepository extends ServiceEntityRepository
     public function findByFilters(array $filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('f')
+            ->leftJoin('f.veterinarians', 'v')
+            ->addSelect('v')
             ->orderBy('f.name', 'ASC');
 
         if (!empty($filters['search'])) {
@@ -56,8 +58,7 @@ class FarmRepository extends ServiceEntityRepository
         }
 
         if (!empty($filters['veterinarian'])) {
-            $qb->innerJoin('f.veterinarians', 'v')
-                ->andWhere('v.id = :vetId')
+            $qb->andWhere('v.id = :vetId')
                 ->setParameter('vetId', $filters['veterinarian']);
         }
 

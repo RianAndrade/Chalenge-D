@@ -56,6 +56,7 @@ class CowRepository extends ServiceEntityRepository
 
         return $this->createQueryBuilder('c')
             ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
             ->where('c.slaughter IS NULL')
             ->andWhere(
                 'c.birthdate < :fiveYearsAgo OR ' .
@@ -71,6 +72,7 @@ class CowRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
             ->orderBy('c.code', 'ASC');
 
         if (!empty($filters['search'])) {
@@ -283,6 +285,7 @@ class CowRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
             ->where('c.slaughter IS NOT NULL')
             ->orderBy('c.slaughter', 'DESC');
     }
