@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relatório de Leite - Fazenda Bovina{% endblock %}
+
+{% block body %}
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Relatório de Produção de Leite',
+        subtitle: 'Análise detalhada da produção de leite dos animais vivos',
+        back_button_path: path('app_dashboard')
+    } %}
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Total Semanal',
+                value: totalMilk|number_format(2, ',', '.'),
+                unit: 'L/semana',
+                icon: 'bi-droplet-fill',
+                color: 'green',
+                footer: 'Soma de todos os animais vivos'
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Animais Listados',
+                value: cows.totalItemCount,
+                unit: 'animais',
+                icon: 'bi-tags-fill',
+                color: 'accent',
+                footer: 'Com os filtros aplicados'
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Média por Animal',
+                value: cows.totalItemCount > 0 ? (totalMilk / cows.totalItemCount)|number_format(2, ',', '.') : '0,00',
+                unit: 'L/semana',
+                icon: 'bi-graph-up',
+                color: 'dark',
+                footer: 'Média geral de produção'
+            } %}
+        </div>
+    </div>
+
+    {% include '_partials/_report_filter.html.twig' with {
+        action: path('app_report_milk'),
+        csv_action: path('app_report_milk_csv'),
+        filters: filters,
+        farms: farms,
+        fields: ['farm', 'milk_min', 'milk_max']
+    } %}
+
+    {% if cows|length > 0 %}
+        <div class="content-card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Código', 'c.code') }}</th>
+                            <th>Fazenda</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Nascimento', 'c.birthdate') }}</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Peso (kg)', 'c.weight') }}</th>
+                            <th class="text-end">{{ knp_pagination_sortable(cows, 'Leite (L/sem)', 'c.milk') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in cows %}
+                            <tr>
+                                <td>{{ loop.index + ((cows.currentPageNumber - 1) * cows.itemNumberPerPage) }}</td>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
+                                <td>{{ cow.birthdate|date('d/m/Y') }}</td>
+                                <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
+                                <td class="text-end"><strong>{{ cow.milk|number_format(2, ',', '.') }}</strong></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-wrapper">
+                <div></div>
+                {{ knp_pagination_render(cows) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="content-card empty-state">
+            <i class="bi bi-droplet"></i>
+            <p>Nenhum animal encontrado com os filtros aplicados.</p>
+        </div>
+    {% endif %}
+{% endblock %}

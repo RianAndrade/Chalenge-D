@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relatório de Animais Jovens - Fazenda Bovina{% endblock %}
+
+{% block body %}
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Relatório de Animais Jovens com Alta Ração',
+        subtitle: 'Animais com menos de 1 ano que consomem mais de 500kg de ração por semana',
+        back_button_path: path('app_dashboard')
+    } %}
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Total de Animais',
+                value: youngHighFeedCount,
+                unit: 'animais',
+                icon: 'bi-heart-pulse-fill',
+                color: 'dark',
+                footer: 'Até 1 ano e mais de 500kg ração/sem'
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Listados',
+                value: cows.totalItemCount,
+                unit: 'animais',
+                icon: 'bi-tags-fill',
+                color: 'green',
+                footer: 'Com os filtros aplicados'
+            } %}
+        </div>
+    </div>
+
+    {% include '_partials/_report_filter.html.twig' with {
+        action: path('app_report_young_high_feed'),
+        csv_action: path('app_report_young_high_feed_csv'),
+        filters: filters,
+        farms: farms,
+        fields: ['farm', 'feed_min']
+    } %}
+
+    {% if cows|length > 0 %}
+        <div class="content-card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Código', 'c.code') }}</th>
+                            <th>Fazenda</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Nascimento', 'c.birthdate') }}</th>
+                            <th>Idade</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Peso (kg)', 'c.weight') }}</th>
+                            <th class="text-end">{{ knp_pagination_sortable(cows, 'Ração (kg/sem)', 'c.feed') }}</th>
+                            <th class="text-end">Ração Diária (kg)</th>
+                            <th class="text-end">{{ knp_pagination_sortable(cows, 'Leite (L/sem)', 'c.milk') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in cows %}
+                            <tr>
+                                <td>{{ loop.index + ((cows.currentPageNumber - 1) * cows.itemNumberPerPage) }}</td>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
+                                <td>{{ cow.birthdate|date('d/m/Y') }}</td>
+                                <td>{{ cow.ageInYears|number_format(1, ',', '.') }} anos</td>
+                                <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
+                                <td class="text-end"><strong>{{ cow.feed|number_format(2, ',', '.') }}</strong></td>
+                                <td class="text-end">{{ cow.dailyFeed|number_format(2, ',', '.') }}</td>
+                                <td class="text-end">{{ cow.milk|number_format(2, ',', '.') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-wrapper">
+                <div></div>
+                {{ knp_pagination_render(cows) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="content-card empty-state">
+            <i class="bi bi-heart-pulse"></i>
+            <p>Nenhum animal jovem com alta ração encontrado.</p>
+        </div>
+    {% endif %}
+{% endblock %}

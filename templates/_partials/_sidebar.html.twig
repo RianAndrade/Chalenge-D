@@ -32,6 +32,23 @@
             <span>Gados</span>
         </a>
 
+        <div class="sidebar-section">Relatórios</div>
+
+        <a href="{{ path('app_report_milk') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_report_milk' ? 'active' }}">
+            <i class="bi bi-droplet-fill"></i>
+            <span>Produção de Leite</span>
+        </a>
+
+        <a href="{{ path('app_report_feed') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_report_feed' ? 'active' }}">
+            <i class="bi bi-basket-fill"></i>
+            <span>Consumo de Ração</span>
+        </a>
+
+        <a href="{{ path('app_report_young_high_feed') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_report_young_high_feed' ? 'active' }}">
+            <i class="bi bi-heart-pulse-fill"></i>
+            <span>Jovens Alta Ração</span>
+        </a>
+
         <div class="sidebar-section">Abate</div>
 
         <a href="{{ path('app_cow_slaughter_list') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_cow_slaughter_list' ? 'active' }}">

@@ -1,0 +1,141 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relatório de Ração - Fazenda Bovina{% endblock %}
+
+{% block body %}
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Relatório de Consumo de Ração',
+        subtitle: 'Análise detalhada do consumo de ração dos animais vivos',
+        back_button_path: path('app_dashboard')
+    } %}
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Total Semanal',
+                value: totalFeed|number_format(2, ',', '.'),
+                unit: 'kg/semana',
+                icon: 'bi-basket-fill',
+                color: 'accent',
+                footer: 'Soma de todos os animais vivos'
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Animais Listados',
+                value: cows.totalItemCount,
+                unit: 'animais',
+                icon: 'bi-tags-fill',
+                color: 'green',
+                footer: 'Com os filtros aplicados'
+            } %}
+        </div>
+        <div class="col-md-4">
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Média por Animal',
+                value: cows.totalItemCount > 0 ? (totalFeed / cows.totalItemCount)|number_format(2, ',', '.') : '0,00',
+                unit: 'kg/semana',
+                icon: 'bi-graph-up',
+                color: 'dark',
+                footer: 'Média geral de consumo'
+            } %}
+        </div>
+    </div>
+
+    {% include '_partials/_report_filter.html.twig' with {
+        action: path('app_report_feed'),
+        csv_action: path('app_report_feed_csv'),
+        filters: filters,
+        farms: farms,
+        fields: ['farm', 'feed_min', 'feed_max']
+    } %}
+
+    {% if feedPerFarm|length > 0 %}
+        <div class="content-card mb-4">
+            <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="stat-card-icon accent" style="width:32px;height:32px;font-size:15px;">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div>
+                        <strong style="font-size:14px;">Ração por Fazenda</strong>
+                        <div style="font-size:11px;color:var(--text-secondary);">Consumo total agrupado por fazenda (kg/semana)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fazenda</th>
+                            <th class="text-end">Ração (kg/sem)</th>
+                            <th class="text-end">% do Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in feedPerFarm %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><strong>{{ row.farmName ?? 'Sem fazenda' }}</strong></td>
+                                <td class="text-end">{{ row.totalFeed|number_format(2, ',', '.') }}</td>
+                                <td class="text-end">{{ totalFeed > 0 ? ((row.totalFeed / totalFeed) * 100)|number_format(1, ',', '.') : '0,0' }}%</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if cows|length > 0 %}
+        <div class="content-card">
+            <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="stat-card-icon accent" style="width:32px;height:32px;font-size:15px;">
+                        <i class="bi bi-basket-fill"></i>
+                    </div>
+                    <div>
+                        <strong style="font-size:14px;">Detalhamento por Animal</strong>
+                        <div style="font-size:11px;color:var(--text-secondary);">Consumo individual de ração</div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Código', 'c.code') }}</th>
+                            <th>Fazenda</th>
+                            <th>Idade</th>
+                            <th class="text-end">{{ knp_pagination_sortable(cows, 'Ração (kg/sem)', 'c.feed') }}</th>
+                            <th class="text-end">Ração Diária (kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in cows %}
+                            <tr>
+                                <td>{{ loop.index + ((cows.currentPageNumber - 1) * cows.itemNumberPerPage) }}</td>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
+                                <td>{{ cow.ageInYears|number_format(1, ',', '.') }} anos</td>
+                                <td class="text-end"><strong>{{ cow.feed|number_format(2, ',', '.') }}</strong></td>
+                                <td class="text-end">{{ cow.dailyFeed|number_format(2, ',', '.') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-wrapper">
+                <div></div>
+                {{ knp_pagination_render(cows) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="content-card empty-state">
+            <i class="bi bi-basket"></i>
+            <p>Nenhum animal encontrado com os filtros aplicados.</p>
+        </div>
+    {% endif %}
+{% endblock %}

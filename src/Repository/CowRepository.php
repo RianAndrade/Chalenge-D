@@ -168,6 +168,84 @@ class CowRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findMilkReport(?int $farmId, ?float $milkMin, ?float $milkMax): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
+            ->where('c.slaughter IS NULL')
+            ->orderBy('c.milk', 'DESC');
+
+        if ($farmId) {
+            $qb->andWhere('f.id = :farmId')
+                ->setParameter('farmId', $farmId);
+        }
+
+        if ($milkMin !== null) {
+            $qb->andWhere('c.milk >= :milkMin')
+                ->setParameter('milkMin', $milkMin);
+        }
+
+        if ($milkMax !== null) {
+            $qb->andWhere('c.milk <= :milkMax')
+                ->setParameter('milkMax', $milkMax);
+        }
+
+        return $qb;
+    }
+
+    public function findFeedReport(?int $farmId, ?float $feedMin, ?float $feedMax): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
+            ->where('c.slaughter IS NULL')
+            ->orderBy('c.feed', 'DESC');
+
+        if ($farmId) {
+            $qb->andWhere('f.id = :farmId')
+                ->setParameter('farmId', $farmId);
+        }
+
+        if ($feedMin !== null) {
+            $qb->andWhere('c.feed >= :feedMin')
+                ->setParameter('feedMin', $feedMin);
+        }
+
+        if ($feedMax !== null) {
+            $qb->andWhere('c.feed <= :feedMax')
+                ->setParameter('feedMax', $feedMax);
+        }
+
+        return $qb;
+    }
+
+    public function findYoungHighFeedReport(?int $farmId, ?float $feedMin): QueryBuilder
+    {
+        $oneYearAgo = new \DateTime('-1 year');
+
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
+            ->where('c.slaughter IS NULL')
+            ->andWhere('c.birthdate >= :oneYearAgo')
+            ->andWhere('c.feed > 500')
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->orderBy('c.feed', 'DESC');
+
+        if ($farmId) {
+            $qb->andWhere('f.id = :farmId')
+                ->setParameter('farmId', $farmId);
+        }
+
+        if ($feedMin !== null) {
+            $qb->andWhere('c.feed >= :feedMin')
+                ->setParameter('feedMin', $feedMin);
+        }
+
+        return $qb;
+    }
+
     public function findSlaughtered(): QueryBuilder
     {
         return $this->createQueryBuilder('c')
