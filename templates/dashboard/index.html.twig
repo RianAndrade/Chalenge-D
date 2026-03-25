@@ -3,43 +3,46 @@
 {% block title %}Início - Fazenda Bovina{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Relatórios Semanais</h1>
+    {% include '_partials/_page_header.html.twig' with {title: 'Dashboard', subtitle: 'Relatório semanal da produção'} %}
 
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="card text-bg-primary h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Leite Produzido</h5>
-                    <p class="card-text display-6">{{ totalMilk|number_format(2, ',', '.') }} L</p>
-                </div>
-                <div class="card-footer">
-                    Total por semana (animais vivos)
-                </div>
-            </div>
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Leite Produzido',
+                value: totalMilk|number_format(2, ',', '.'),
+                unit: 'L/semana',
+                icon: 'bi-droplet-fill',
+                color: 'green',
+                footer: 'Total por semana (animais vivos)',
+                bar_color: 'var(--primary)',
+                bar_width: 72
+            } %}
         </div>
 
         <div class="col-md-4">
-            <div class="card text-bg-success h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Ração Necessária</h5>
-                    <p class="card-text display-6">{{ totalFeed|number_format(2, ',', '.') }} Kg</p>
-                </div>
-                <div class="card-footer">
-                    Total por semana (animais vivos)
-                </div>
-            </div>
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Ração Necessária',
+                value: totalFeed|number_format(2, ',', '.'),
+                unit: 'kg/semana',
+                icon: 'bi-basket-fill',
+                color: 'accent',
+                footer: 'Total por semana (animais vivos)',
+                bar_color: 'var(--accent)',
+                bar_width: 55
+            } %}
         </div>
 
         <div class="col-md-4">
-            <div class="card text-bg-warning h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Animais Jovens com Alta Ração</h5>
-                    <p class="card-text display-6">{{ youngHighFeedCount }}</p>
-                </div>
-                <div class="card-footer">
-                    Até 1 ano de idade e mais de 500Kg de ração/semana
-                </div>
-            </div>
+            {% include '_partials/_stat_card.html.twig' with {
+                label: 'Animais Jovens com Alta Ração',
+                value: youngHighFeedCount,
+                unit: 'animais',
+                icon: 'bi-heart-pulse-fill',
+                color: 'dark',
+                footer: 'Até 1 ano e mais de 500kg ração/semana',
+                bar_color: 'var(--sidebar-bg)',
+                bar_width: 35
+            } %}
         </div>
     </div>
 {% endblock %}
