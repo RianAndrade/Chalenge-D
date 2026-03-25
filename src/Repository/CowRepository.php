@@ -119,6 +119,55 @@ class CowRepository extends ServiceEntityRepository
         return (int) $result;
     }
 
+    /**
+     * @return Cow[]
+     */
+    public function findTop10MilkProducers(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
+            ->where('c.slaughter IS NULL')
+            ->orderBy('c.milk', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Cow[]
+     */
+    public function findTop10FeedConsumersOverOneYear(): array
+    {
+        $oneYearAgo = new \DateTime('-1 year');
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->addSelect('f')
+            ->where('c.slaughter IS NULL')
+            ->andWhere('c.birthdate <= :oneYearAgo')
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->orderBy('c.feed', 'DESC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<array{farmName: string, totalFeed: float}>
+     */
+    public function getTotalFeedPerFarm(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('f.name AS farmName, COALESCE(SUM(c.feed), 0) AS totalFeed')
+            ->leftJoin('c.farm', 'f')
+            ->where('c.slaughter IS NULL')
+            ->groupBy('f.id')
+            ->orderBy('totalFeed', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findSlaughtered(): QueryBuilder
     {
         return $this->createQueryBuilder('c')

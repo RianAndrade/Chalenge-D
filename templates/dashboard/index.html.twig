@@ -45,4 +45,130 @@
             } %}
         </div>
     </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-6">
+            <div class="content-card">
+                <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="stat-card-icon green" style="width:32px;height:32px;font-size:15px;">
+                            <i class="bi bi-droplet-fill"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:14px;">Top 10 — Produção de Leite</strong>
+                            <div style="font-size:11px;color:var(--text-secondary);">Vacas vivas com maior produção (L/semana)</div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Código</th>
+                            <th>Fazenda</th>
+                            <th class="text-end">Leite (L/sem)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in topMilkProducers %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td>{{ cow.farm ? cow.farm.name : '—' }}</td>
+                                <td class="text-end">{{ cow.milk|number_format(2, ',', '.') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Nenhum animal encontrado</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="content-card">
+                <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="stat-card-icon accent" style="width:32px;height:32px;font-size:15px;">
+                            <i class="bi bi-basket-fill"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:14px;">Ração por Fazenda</strong>
+                            <div style="font-size:11px;color:var(--text-secondary);">Total de ração consumida por fazenda (kg/semana)</div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fazenda</th>
+                            <th class="text-end">Ração (kg/sem)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in feedPerFarm %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><strong>{{ row.farmName ?? 'Sem fazenda' }}</strong></td>
+                                <td class="text-end">{{ row.totalFeed|number_format(2, ',', '.') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">Nenhuma fazenda encontrada</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="content-card">
+                <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="stat-card-icon dark" style="width:32px;height:32px;font-size:15px;">
+                            <i class="bi bi-heart-pulse-fill"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:14px;">Top 10 — Consumo de Ração (animais +1 ano)</strong>
+                            <div style="font-size:11px;color:var(--text-secondary);">Animais vivos com mais de 1 ano que mais consomem ração</div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Código</th>
+                            <th>Fazenda</th>
+                            <th>Idade</th>
+                            <th class="text-end">Ração (kg/sem)</th>
+                            <th class="text-end">Ração Diária (kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cow in topFeedConsumers %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td>{{ cow.farm ? cow.farm.name : '—' }}</td>
+                                <td>{{ cow.ageInYears|number_format(1, ',', '.') }} anos</td>
+                                <td class="text-end">{{ cow.feed|number_format(2, ',', '.') }}</td>
+                                <td class="text-end">{{ cow.dailyFeed|number_format(2, ',', '.') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">Nenhum animal encontrado</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

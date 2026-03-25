@@ -21,6 +21,9 @@ class DashboardController extends AbstractController
             'totalMilk' => $this->cowRepository->getTotalMilkPerWeek(),
             'totalFeed' => $this->cowRepository->getTotalFeedPerWeek(),
             'youngHighFeedCount' => $this->cowRepository->countYoungHighFeedCows(),
+            'topMilkProducers' => $this->cowRepository->findTop10MilkProducers(),
+            'feedPerFarm' => $this->cowRepository->getTotalFeedPerFarm(),
+            'topFeedConsumers' => $this->cowRepository->findTop10FeedConsumersOverOneYear(),
         ]);
     }
 }
