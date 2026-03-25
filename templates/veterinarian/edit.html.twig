@@ -3,7 +3,13 @@
 {% block title %}Editar Veterinário - {{ veterinarian.name }}{% endblock %}
 
 {% block body %}
-    <h1>Editar Veterinário</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Editar Veterinário',
+        subtitle: 'Alterar dados de ' ~ veterinarian.name,
+        back_button_path: path('app_veterinarian_index')
+    } %}
 
-    {% include 'veterinarian/_form.html.twig' with {button_label: 'Atualizar'} %}
+    <div class="form-card">
+        {% include 'veterinarian/_form.html.twig' with {button_label: 'Atualizar'} %}
+    </div>
 {% endblock %}

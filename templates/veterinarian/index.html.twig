@@ -3,54 +3,57 @@
 {% block title %}Veterinários{% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Veterinários</h1>
-        <a href="{{ path('app_veterinarian_create') }}" class="btn btn-primary">Novo Veterinário</a>
-    </div>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Veterinários',
+        subtitle: 'Gerencie os profissionais',
+        add_button_label: 'Novo Veterinário',
+        add_button_path: path('app_veterinarian_create')
+    } %}
 
-    <form method="get" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Buscar por nome ou CRMV..." value="{{ search }}">
-            <button type="submit" class="btn btn-outline-secondary">Buscar</button>
-            {% if search %}
-                <a href="{{ path('app_veterinarian_index') }}" class="btn btn-outline-danger">Limpar</a>
-            {% endif %}
-        </div>
-    </form>
+    {% include '_partials/_search_bar.html.twig' with {
+        search: search,
+        placeholder: 'Buscar por nome ou CRMV...',
+        clear_path: path('app_veterinarian_index')
+    } %}
 
     {% if veterinarians|length > 0 %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>{{ knp_pagination_sortable(veterinarians, 'Nome', 'v.name') }}</th>
-                        <th>{{ knp_pagination_sortable(veterinarians, 'CRMV', 'v.crmv') }}</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for veterinarian in veterinarians %}
+        <div class="content-card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ veterinarian.name }}</td>
-                            <td>{{ veterinarian.crmv }}</td>
-                            <td class="text-end">
-                                <a href="{{ path('app_veterinarian_show', {id: veterinarian.id}) }}" class="btn btn-sm btn-info">Ver</a>
-                                <a href="{{ path('app_veterinarian_edit', {id: veterinarian.id}) }}" class="btn btn-sm btn-warning">Editar</a>
-                                <form method="post" action="{{ path('app_veterinarian_delete', {id: veterinarian.id}) }}" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ veterinarian.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                </form>
-                            </td>
+                            <th>{{ knp_pagination_sortable(veterinarians, 'Nome', 'v.name') }}</th>
+                            <th>{{ knp_pagination_sortable(veterinarians, 'CRMV', 'v.crmv') }}</th>
+                            <th class="text-end">Ações</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(veterinarians) }}
+                    </thead>
+                    <tbody>
+                        {% for veterinarian in veterinarians %}
+                            <tr>
+                                <td><strong>{{ veterinarian.name }}</strong></td>
+                                <td>{{ veterinarian.crmv }}</td>
+                                <td>
+                                    {% include '_partials/_action_buttons.html.twig' with {
+                                        show_path: path('app_veterinarian_show', {id: veterinarian.id}),
+                                        edit_path: path('app_veterinarian_edit', {id: veterinarian.id}),
+                                        delete_path: path('app_veterinarian_delete', {id: veterinarian.id}),
+                                        delete_token: csrf_token('delete' ~ veterinarian.id)
+                                    } %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-wrapper">
+                <div></div>
+                {{ knp_pagination_render(veterinarians) }}
+            </div>
         </div>
     {% else %}
-        <div class="alert alert-info">Nenhum veterinário encontrado.</div>
+        <div class="content-card empty-state">
+            <i class="bi bi-clipboard2-pulse"></i>
+            <p>Nenhum veterinário encontrado.</p>
+        </div>
     {% endif %}
 {% endblock %}

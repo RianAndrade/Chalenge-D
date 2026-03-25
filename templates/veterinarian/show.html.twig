@@ -3,23 +3,33 @@
 {% block title %}Veterinário - {{ veterinarian.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ veterinarian.name }}</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: veterinarian.name,
+        subtitle: 'Detalhes do veterinário',
+        back_button_path: path('app_veterinarian_index')
+    } %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nome</th>
-                <td>{{ veterinarian.name }}</td>
-            </tr>
-            <tr>
-                <th>CRMV</th>
-                <td>{{ veterinarian.crmv }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="detail-card">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Nome</th>
+                    <td><strong>{{ veterinarian.name }}</strong></td>
+                </tr>
+                <tr>
+                    <th>CRMV</th>
+                    <td>{{ veterinarian.crmv }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <div class="d-flex gap-2">
-        <a href="{{ path('app_veterinarian_edit', {id: veterinarian.id}) }}" class="btn btn-warning">Editar</a>
-        <a href="{{ path('app_veterinarian_index') }}" class="btn btn-secondary">Voltar</a>
+    <div class="d-flex gap-2 mt-3">
+        <a href="{{ path('app_veterinarian_edit', {id: veterinarian.id}) }}" class="btn-primary-custom">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <a href="{{ path('app_veterinarian_index') }}" class="btn-secondary-custom">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
     </div>
 {% endblock %}

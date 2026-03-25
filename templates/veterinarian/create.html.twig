@@ -3,7 +3,13 @@
 {% block title %}Novo Veterinário{% endblock %}
 
 {% block body %}
-    <h1>Novo Veterinário</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Novo Veterinário',
+        subtitle: 'Cadastrar novo profissional',
+        back_button_path: path('app_veterinarian_index')
+    } %}
 
-    {% include 'veterinarian/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    <div class="form-card">
+        {% include 'veterinarian/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    </div>
 {% endblock %}
