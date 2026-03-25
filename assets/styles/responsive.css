@@ -1,0 +1,39 @@
+/* ---- Responsive: Tablet ---- */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar-spacer {
+        display: none;
+    }
+
+    .main-content {
+        padding: 20px 16px;
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    body.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    body.sidebar-open .sidebar-backdrop {
+        display: block;
+    }
+}
+
+/* ---- Responsive: Mobile ---- */
+@media (max-width: 767.98px) {
+    .stat-card-value {
+        font-size: 24px;
+    }
+
+    .content-card .table thead th,
+    .content-card .table tbody td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}

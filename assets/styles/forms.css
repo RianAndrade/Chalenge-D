@@ -1,0 +1,231 @@
+/* ---- Search Bar ---- */
+.search-bar {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-bar .form-control {
+    border: none;
+    box-shadow: none;
+    padding: 4px 0;
+    font-size: 13px;
+    background: transparent;
+}
+
+.search-bar .form-control:focus {
+    box-shadow: none;
+}
+
+.search-bar .btn-search {
+    background: var(--sidebar-bg);
+    color: white;
+    padding: 6px 16px;
+    border-radius: var(--radius-xs);
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.search-bar .btn-search:hover {
+    background: var(--sidebar-hover);
+    color: white;
+}
+
+.search-bar .btn-clear {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    padding: 6px 12px;
+    border-radius: var(--radius-xs);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.search-bar .btn-clear:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* ---- Forms ---- */
+.form-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 28px;
+    width: 100%;
+}
+
+.form-card .form-control,
+.form-card .form-select {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-card .form-control:focus,
+.form-card .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-card .form-control.is-invalid {
+    border-color: var(--danger);
+}
+
+.form-card .form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px var(--danger-light);
+}
+
+.form-card .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.form-card .form-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.form-card .invalid-feedback {
+    font-size: 12px;
+    color: var(--danger);
+}
+
+/* ---- Multi-select ---- */
+.multiselect-wrapper {
+    position: relative;
+}
+
+.multiselect-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card-bg);
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.multiselect-input:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.multiselect-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.multiselect-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius-xs, 4px);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.multiselect-tag-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.multiselect-tag-remove:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.multiselect-search {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 80px;
+    padding: 2px 0;
+}
+
+.multiselect-search::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.multiselect-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    margin-top: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.multiselect-option {
+    padding: 9px 14px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.multiselect-option:hover {
+    background: var(--bg-alt);
+}
+
+.multiselect-option.selected {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.multiselect-option.selected:hover {
+    background: var(--primary-light);
+    opacity: 0.85;
+}
+
+.multiselect-empty {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+}

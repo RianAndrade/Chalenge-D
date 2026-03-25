@@ -1,0 +1,300 @@
+/* ---- Stat Cards (Dashboard) ---- */
+.stat-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    height: 100%;
+}
+
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.stat-card-label {
+    color: var(--text-secondary);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+}
+
+.stat-card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.stat-card-icon.green {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.stat-card-icon.accent {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.stat-card-icon.dark {
+    background: rgba(26, 35, 50, 0.08);
+    color: var(--text-primary);
+}
+
+.stat-card-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.1;
+}
+
+.stat-card-unit {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+.stat-card-footer {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.stat-card-bar {
+    margin-top: 14px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.stat-card-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+/* ---- Content Card ---- */
+.content-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+/* ---- Detail Card (show pages) ---- */
+.detail-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.detail-card .table {
+    margin-bottom: 0;
+}
+
+.detail-card .table th {
+    background: var(--bg-alt);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 20px;
+    width: 180px;
+    border-bottom: 1px solid #f0ede8;
+}
+
+.detail-card .table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--text-primary);
+    border-bottom: 1px solid #f0ede8;
+}
+
+/* ---- Action Buttons ---- */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-xs);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.action-btn-view {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.action-btn-view:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.action-btn-edit {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+.action-btn-edit:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.action-btn-delete {
+    background: var(--danger-light);
+    color: var(--danger);
+}
+
+.action-btn-delete:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* ---- Badges ---- */
+.badge-farm {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-vet {
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ---- Buttons ---- */
+.btn-primary-custom {
+    background: var(--primary);
+    color: white;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-primary-custom:hover {
+    background: #347a50;
+    color: white;
+}
+
+.btn-secondary-custom {
+    background: var(--bg);
+    color: var(--text-primary);
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-secondary-custom:hover {
+    background: var(--border);
+    color: var(--text-primary);
+}
+
+.btn-danger-custom {
+    background: var(--danger);
+    color: white;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-danger-custom:hover {
+    background: #c93434;
+    color: white;
+}
+
+/* ---- Flash Messages ---- */
+.alert {
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    border: none;
+}
+
+.alert-success {
+    background: rgba(61, 139, 94, 0.1);
+    color: #2d6b45;
+}
+
+.alert-danger {
+    background: rgba(229, 62, 62, 0.1);
+    color: #b52828;
+}
+
+.alert-warning {
+    background: rgba(193, 123, 58, 0.1);
+    color: #8a5a2a;
+}
+
+.alert-info {
+    background: rgba(26, 35, 50, 0.06);
+    color: var(--text-primary);
+}
+
+/* ---- Modal ---- */
+.modal-content {
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header.bg-danger {
+    background: var(--danger) !important;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* ---- Misc ---- */
+.empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state .bi {
+    font-size: 48px;
+    color: var(--border);
+    display: block;
+    margin-bottom: 16px;
+}
