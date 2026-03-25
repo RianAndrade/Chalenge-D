@@ -93,4 +93,56 @@ class CowController extends AbstractController
 
         return $this->redirectToRoute('app_cow_index');
     }
+
+    #[Route('/slaughter/report', name: 'slaughter_report', methods: ['GET'], priority: 1)]
+    public function slaughterReport(Request $request, PaginatorInterface $paginator): Response
+    {
+        $query = $this->repository->findSlaughtered();
+
+        $cows = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('cow/slaughter_report.html.twig', [
+            'cows' => $cows,
+        ]);
+    }
+
+    #[Route('/slaughter/list', name: 'slaughter_list', methods: ['GET'], priority: 1)]
+    public function slaughterList(Request $request, PaginatorInterface $paginator): Response
+    {
+        $query = $this->repository->findEligibleForSlaughter();
+
+        $cows = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('cow/slaughter_list.html.twig', [
+            'cows' => $cows,
+        ]);
+    }
+
+    #[Route('/{id}/slaughter', name: 'slaughter', methods: ['POST'], priority: 1)]
+    public function slaughter(Request $request, Cow $cow): Response
+    {
+        if (!$this->isCsrfTokenValid('slaughter' . $cow->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('app_cow_slaughter_list');
+        }
+
+        if (!$cow->isEligibleForSlaughter()) {
+            $this->addFlash('error', 'Este animal não se enquadra nas condições para abate.');
+
+            return $this->redirectToRoute('app_cow_slaughter_list');
+        }
+
+        $cow->setSlaughter(new \DateTime());
+        $this->repository->save($cow, true);
+        $this->addFlash('success', 'Animal enviado para abate com sucesso.');
+
+        return $this->redirectToRoute('app_cow_slaughter_list');
+    }
 }
