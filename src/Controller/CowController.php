@@ -145,4 +145,24 @@ class CowController extends AbstractController
 
         return $this->redirectToRoute('app_cow_slaughter_list');
     }
+
+    #[Route('/{id}/revert-slaughter', name: 'revert_slaughter', methods: ['POST'], priority: 1)]
+    public function revertSlaughter(Request $request, Cow $cow): Response
+    {
+        if (!$this->isCsrfTokenValid('revert_slaughter' . $cow->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('app_cow_slaughter_report');
+        }
+
+        if ($cow->isAlive()) {
+            $this->addFlash('error', 'Este animal não está abatido.');
+
+            return $this->redirectToRoute('app_cow_slaughter_report');
+        }
+
+        $cow->setSlaughter(null);
+        $this->repository->save($cow, true);
+        $this->addFlash('success', 'Abate revertido com sucesso. O animal voltou ao rebanho.');
+
+        return $this->redirectToRoute('app_cow_slaughter_report');
+    }
 }

@@ -19,6 +19,7 @@
                             <th>Fazenda</th>
                             <th>{{ knp_pagination_sortable(cows, 'Nascimento', 'c.birthdate') }}</th>
                             <th>{{ knp_pagination_sortable(cows, 'Data de Abate', 'c.slaughter') }}</th>
+                            <th class="text-end">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +29,14 @@
                                 <td><span class="badge-farm">{{ cow.farm.name }}</span></td>
                                 <td>{{ cow.birthdate|date('d/m/Y') }}</td>
                                 <td>{{ cow.slaughter|date('d/m/Y') }}</td>
+                                <td class="text-end">
+                                    <form method="post" action="{{ path('app_cow_revert_slaughter', {id: cow.id}) }}" class="d-inline" onsubmit="return confirm('ATENÇÃO: Tem certeza que deseja reverter o abate deste animal? Ele voltará ao rebanho ativo.')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('revert_slaughter' ~ cow.id) }}">
+                                        <button type="submit" class="btn-action" style="padding:6px 14px; font-size:12px;">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Reverter
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
