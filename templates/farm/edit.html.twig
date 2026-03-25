@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Fazenda - {{ farm.name }}{% endblock %}
+
+{% block body %}
+    <h1>Editar Fazenda</h1>
+
+    {% include 'farm/_form.html.twig' with {button_label: 'Atualizar'} %}
+{% endblock %}

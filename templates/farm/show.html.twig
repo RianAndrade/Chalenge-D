@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fazenda - {{ farm.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ farm.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nome</th>
+                <td>{{ farm.name }}</td>
+            </tr>
+            <tr>
+                <th>Tamanho</th>
+                <td>{{ farm.size|number_format(2, ',', '.') }} HA</td>
+            </tr>
+            <tr>
+                <th>Responsável</th>
+                <td>{{ farm.manager }}</td>
+            </tr>
+            <tr>
+                <th>Veterinários</th>
+                <td>
+                    {% for vet in farm.veterinarians %}
+                        <span class="badge bg-secondary">{{ vet.name }}</span>
+                    {% else %}
+                        <span class="text-muted">Nenhum veterinário vinculado</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_farm_edit', {id: farm.id}) }}" class="btn btn-warning">Editar</a>
+        <a href="{{ path('app_farm_index') }}" class="btn btn-secondary">Voltar</a>
+    </div>
+{% endblock %}

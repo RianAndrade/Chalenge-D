@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nova Fazenda{% endblock %}
+
+{% block body %}
+    <h1>Nova Fazenda</h1>
+
+    {% include 'farm/_form.html.twig' with {button_label: 'Cadastrar'} %}
+{% endblock %}
