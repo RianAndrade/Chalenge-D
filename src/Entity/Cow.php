@@ -155,8 +155,9 @@ class Cow
             return 0;
         }
 
-        return $this->birthdate->diff(new \DateTime())->y
-            + $this->birthdate->diff(new \DateTime())->m / 12;
+        $diff = $this->birthdate->diff(new \DateTime());
+
+        return $diff->y + $diff->m / 12 + $diff->d / 365.25;
     }
 
     public function getDailyFeed(): float
