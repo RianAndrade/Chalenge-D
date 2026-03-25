@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Veterinário - {{ veterinarian.name }}{% endblock %}
+
+{% block body %}
+    <h1>Editar Veterinário</h1>
+
+    {% include 'veterinarian/_form.html.twig' with {button_label: 'Atualizar'} %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Veterinário - {{ veterinarian.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ veterinarian.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nome</th>
+                <td>{{ veterinarian.name }}</td>
+            </tr>
+            <tr>
+                <th>CRMV</th>
+                <td>{{ veterinarian.crmv }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_veterinarian_edit', {id: veterinarian.id}) }}" class="btn btn-warning">Editar</a>
+        <a href="{{ path('app_veterinarian_index') }}" class="btn btn-secondary">Voltar</a>
+    </div>
+{% endblock %}

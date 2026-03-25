@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Novo Veterinário{% endblock %}
+
+{% block body %}
+    <h1>Novo Veterinário</h1>
+
+    {% include 'veterinarian/_form.html.twig' with {button_label: 'Cadastrar'} %}
+{% endblock %}
