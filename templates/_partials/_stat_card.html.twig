@@ -1,0 +1,24 @@
+{# Usage: {% include '_partials/_stat_card.html.twig' with {label: 'Label', value: '100', unit: 'kg', icon: 'bi-droplet-fill', color: 'green', footer: 'Extra info'} %} #}
+
+<div class="stat-card">
+    <div class="stat-card-header">
+        <div class="stat-card-label">{{ label }}</div>
+        <div class="stat-card-icon {{ color|default('green') }}">
+            <i class="bi {{ icon }}"></i>
+        </div>
+    </div>
+    <div class="stat-card-value">
+        {{ value }}
+        {% if unit is defined and unit %}
+            <span class="stat-card-unit">{{ unit }}</span>
+        {% endif %}
+    </div>
+    {% if footer is defined and footer %}
+        <div class="stat-card-footer">{{ footer }}</div>
+    {% endif %}
+    {% if bar_color is defined %}
+        <div class="stat-card-bar">
+            <div class="stat-card-bar-fill" style="width: {{ bar_width|default('50') }}%; background: {{ bar_color }};"></div>
+        </div>
+    {% endif %}
+</div>

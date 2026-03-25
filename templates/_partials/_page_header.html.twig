@@ -1,0 +1,23 @@
+{# Usage: {% include '_partials/_page_header.html.twig' with {title: 'Page Title', subtitle: 'Description'} %} #}
+{# Optional: add_button_label, add_button_path, back_button_path #}
+
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h1>{{ title }}</h1>
+        {% if subtitle is defined and subtitle %}
+            <p>{{ subtitle }}</p>
+        {% endif %}
+    </div>
+    <div class="d-flex gap-2">
+        {% if add_button_label is defined and add_button_path is defined %}
+            <a href="{{ add_button_path }}" class="btn-primary-custom">
+                <i class="bi bi-plus-lg"></i> {{ add_button_label }}
+            </a>
+        {% endif %}
+        {% if back_button_path is defined %}
+            <a href="{{ back_button_path }}" class="btn-secondary-custom">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </a>
+        {% endif %}
+    </div>
+</div>

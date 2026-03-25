@@ -1,0 +1,12 @@
+{# Usage: {% include '_partials/_search_bar.html.twig' with {search: search, placeholder: 'Buscar...', clear_path: path('route')} %} #}
+
+<form method="get" class="search-bar">
+    <i class="bi bi-search text-secondary"></i>
+    <input type="text" name="search" class="form-control" placeholder="{{ placeholder|default('Buscar...') }}" value="{{ search }}">
+    <button type="submit" class="btn-search">
+        <i class="bi bi-funnel"></i> Filtrar
+    </button>
+    {% if search %}
+        <a href="{{ clear_path }}" class="btn-clear">Limpar</a>
+    {% endif %}
+</form>

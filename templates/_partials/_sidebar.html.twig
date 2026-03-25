@@ -1,0 +1,47 @@
+<aside class="sidebar">
+    <a href="{{ path('app_dashboard') }}" class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+            <i class="bi bi-box-seam-fill"></i>
+        </div>
+        <div>
+            <div class="sidebar-brand-text">Fazenda Bovina</div>
+            <div class="sidebar-brand-sub">Sistema de Gestão</div>
+        </div>
+    </a>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-section">Principal</div>
+
+        <a href="{{ path('app_dashboard') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'active' }}">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ path('app_veterinarian_index') }}" class="sidebar-item {{ app.request.attributes.get('_route') starts with 'app_veterinarian' ? 'active' }}">
+            <i class="bi bi-clipboard2-pulse"></i>
+            <span>Veterinários</span>
+        </a>
+
+        <a href="{{ path('app_farm_index') }}" class="sidebar-item {{ app.request.attributes.get('_route') starts with 'app_farm' ? 'active' }}">
+            <i class="bi bi-building"></i>
+            <span>Fazendas</span>
+        </a>
+
+        <a href="{{ path('app_cow_index') }}" class="sidebar-item {{ app.request.attributes.get('_route') in ['app_cow_index', 'app_cow_show', 'app_cow_create', 'app_cow_edit'] ? 'active' }}">
+            <i class="bi bi-tags-fill"></i>
+            <span>Gados</span>
+        </a>
+
+        <div class="sidebar-section">Abate</div>
+
+        <a href="{{ path('app_cow_slaughter_list') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_cow_slaughter_list' ? 'active' }}">
+            <i class="bi bi-list-check"></i>
+            <span>Lista de Abate</span>
+        </a>
+
+        <a href="{{ path('app_cow_slaughter_report') }}" class="sidebar-item {{ app.request.attributes.get('_route') == 'app_cow_slaughter_report' ? 'active' }}">
+            <i class="bi bi-journal-text"></i>
+            <span>Abatidos</span>
+        </a>
+    </nav>
+</aside>

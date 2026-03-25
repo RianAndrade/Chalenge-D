@@ -1,0 +1,22 @@
+{# Usage: {% include '_partials/_action_buttons.html.twig' with {show_path: path(...), edit_path: path(...), delete_path: path(...), delete_token: csrf_token(...)} %} #}
+
+<div class="d-flex gap-2 justify-content-end">
+    {% if show_path is defined %}
+        <a href="{{ show_path }}" class="action-btn action-btn-view" title="Ver">
+            <i class="bi bi-eye"></i>
+        </a>
+    {% endif %}
+    {% if edit_path is defined %}
+        <a href="{{ edit_path }}" class="action-btn action-btn-edit" title="Editar">
+            <i class="bi bi-pencil"></i>
+        </a>
+    {% endif %}
+    {% if delete_path is defined and delete_token is defined %}
+        <form method="post" action="{{ delete_path }}" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
+            <input type="hidden" name="_token" value="{{ delete_token }}">
+            <button type="submit" class="action-btn action-btn-delete" title="Excluir">
+                <i class="bi bi-trash3"></i>
+            </button>
+        </form>
+    {% endif %}
+</div>
