@@ -24,8 +24,8 @@ class ReportController extends AbstractController
     public function milk(Request $request, PaginatorInterface $paginator): Response
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $milkMin = $request->query->get('milk_min') !== null && $request->query->get('milk_min') !== '' ? (float) $request->query->get('milk_min') : null;
-        $milkMax = $request->query->get('milk_max') !== null && $request->query->get('milk_max') !== '' ? (float) $request->query->get('milk_max') : null;
+        $milkMin = $this->parsePositiveFloat($request->query->get('milk_min'));
+        $milkMax = $this->parsePositiveFloat($request->query->get('milk_max'));
 
         $query = $this->cowRepository->findMilkReport($farmId, $milkMin, $milkMax);
 
@@ -51,8 +51,8 @@ class ReportController extends AbstractController
     public function feed(Request $request, PaginatorInterface $paginator): Response
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $feedMin = $request->query->get('feed_min') !== null && $request->query->get('feed_min') !== '' ? (float) $request->query->get('feed_min') : null;
-        $feedMax = $request->query->get('feed_max') !== null && $request->query->get('feed_max') !== '' ? (float) $request->query->get('feed_max') : null;
+        $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
+        $feedMax = $this->parsePositiveFloat($request->query->get('feed_max'));
 
         $query = $this->cowRepository->findFeedReport($farmId, $feedMin, $feedMax);
 
@@ -79,7 +79,7 @@ class ReportController extends AbstractController
     public function youngHighFeed(Request $request, PaginatorInterface $paginator): Response
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $feedMin = $request->query->get('feed_min') !== null && $request->query->get('feed_min') !== '' ? (float) $request->query->get('feed_min') : null;
+        $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
 
         $query = $this->cowRepository->findYoungHighFeedReport($farmId, $feedMin);
 
@@ -104,10 +104,11 @@ class ReportController extends AbstractController
     public function milkCsv(Request $request): StreamedResponse
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $milkMin = $request->query->get('milk_min') !== null && $request->query->get('milk_min') !== '' ? (float) $request->query->get('milk_min') : null;
-        $milkMax = $request->query->get('milk_max') !== null && $request->query->get('milk_max') !== '' ? (float) $request->query->get('milk_max') : null;
+        $milkMin = $this->parsePositiveFloat($request->query->get('milk_min'));
+        $milkMax = $this->parsePositiveFloat($request->query->get('milk_max'));
 
         $cows = $this->cowRepository->findMilkReport($farmId, $milkMin, $milkMax)
+            ->setMaxResults(10000)
             ->getQuery()
             ->getResult();
 
@@ -134,10 +135,11 @@ class ReportController extends AbstractController
     public function feedCsv(Request $request): StreamedResponse
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $feedMin = $request->query->get('feed_min') !== null && $request->query->get('feed_min') !== '' ? (float) $request->query->get('feed_min') : null;
-        $feedMax = $request->query->get('feed_max') !== null && $request->query->get('feed_max') !== '' ? (float) $request->query->get('feed_max') : null;
+        $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
+        $feedMax = $this->parsePositiveFloat($request->query->get('feed_max'));
 
         $cows = $this->cowRepository->findFeedReport($farmId, $feedMin, $feedMax)
+            ->setMaxResults(10000)
             ->getQuery()
             ->getResult();
 
@@ -164,9 +166,10 @@ class ReportController extends AbstractController
     public function youngHighFeedCsv(Request $request): StreamedResponse
     {
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
-        $feedMin = $request->query->get('feed_min') !== null && $request->query->get('feed_min') !== '' ? (float) $request->query->get('feed_min') : null;
+        $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
 
         $cows = $this->cowRepository->findYoungHighFeedReport($farmId, $feedMin)
+            ->setMaxResults(10000)
             ->getQuery()
             ->getResult();
 
@@ -199,5 +202,16 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
         return $response;
+    }
+
+    private function parsePositiveFloat(?string $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $float = (float) $value;
+
+        return $float > 0 ? $float : null;
     }
 }

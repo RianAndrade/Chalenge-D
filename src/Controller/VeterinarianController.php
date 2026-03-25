@@ -92,10 +92,14 @@ class VeterinarianController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Veterinarian $veterinarian): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $veterinarian->getId(), $request->request->get('_token'))) {
-            $this->repository->remove($veterinarian, true);
-            $this->addFlash('success', 'Veterinário removido com sucesso.');
+        if (!$this->isCsrfTokenValid('delete' . $veterinarian->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token inválido, tente novamente.');
+
+            return $this->redirectToRoute('app_veterinarian_index');
         }
+
+        $this->repository->remove($veterinarian, true);
+        $this->addFlash('success', 'Veterinário removido com sucesso.');
 
         return $this->redirectToRoute('app_veterinarian_index');
     }

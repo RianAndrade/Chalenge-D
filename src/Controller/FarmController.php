@@ -107,16 +107,20 @@ class FarmController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Farm $farm, CowRepository $cowRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $farm->getId(), $request->request->get('_token'))) {
-            if ($cowRepository->count(['farm' => $farm]) > 0) {
-                $this->addFlash('error', 'Não é possível remover a fazenda pois ela possui animais cadastrados.');
+        if (!$this->isCsrfTokenValid('delete' . $farm->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token inválido, tente novamente.');
 
-                return $this->redirectToRoute('app_farm_index');
-            }
-
-            $this->repository->remove($farm, true);
-            $this->addFlash('success', 'Fazenda removida com sucesso.');
+            return $this->redirectToRoute('app_farm_index');
         }
+
+        if ($cowRepository->count(['farm' => $farm]) > 0) {
+            $this->addFlash('error', 'Não é possível remover a fazenda pois ela possui animais cadastrados.');
+
+            return $this->redirectToRoute('app_farm_index');
+        }
+
+        $this->repository->remove($farm, true);
+        $this->addFlash('success', 'Fazenda removida com sucesso.');
 
         return $this->redirectToRoute('app_farm_index');
     }

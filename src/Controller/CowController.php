@@ -27,10 +27,10 @@ class CowController extends AbstractController
             'search' => $request->query->get('search'),
             'farm' => $request->query->get('farm'),
             'status' => $request->query->get('status'),
-            'milk_min' => $request->query->get('milk_min'),
-            'milk_max' => $request->query->get('milk_max'),
-            'weight_min' => $request->query->get('weight_min'),
-            'weight_max' => $request->query->get('weight_max'),
+            'milk_min' => max(0, (float) $request->query->get('milk_min', 0)) ?: null,
+            'milk_max' => max(0, (float) $request->query->get('milk_max', 0)) ?: null,
+            'weight_min' => max(0, (float) $request->query->get('weight_min', 0)) ?: null,
+            'weight_max' => max(0, (float) $request->query->get('weight_max', 0)) ?: null,
         ];
 
         $query = $this->repository->findByFilters($filters);
@@ -97,10 +97,14 @@ class CowController extends AbstractController
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Cow $cow): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
-            $this->repository->remove($cow, true);
-            $this->addFlash('success', 'Gado removido com sucesso.');
+        if (!$this->isCsrfTokenValid('delete' . $cow->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token inválido, tente novamente.');
+
+            return $this->redirectToRoute('app_cow_index');
         }
+
+        $this->repository->remove($cow, true);
+        $this->addFlash('success', 'Gado removido com sucesso.');
 
         return $this->redirectToRoute('app_cow_index');
     }
@@ -142,6 +146,12 @@ class CowController extends AbstractController
     {
         if (!$this->isCsrfTokenValid('slaughter' . $cow->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Token inválido, tente novamente.');
+
+            return $this->redirectToRoute('app_cow_slaughter_list');
+        }
+
+        if (!$cow->isAlive()) {
+            $this->addFlash('error', 'Este animal já foi abatido.');
 
             return $this->redirectToRoute('app_cow_slaughter_list');
         }
