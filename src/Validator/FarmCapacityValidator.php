@@ -34,7 +34,7 @@ class FarmCapacityValidator extends ConstraintValidator
         }
 
         $limit = (int) floor($farm->getSize() * Farm::MAX_ANIMALS_PER_HECTARE);
-        $current = $this->cowRepository->count(['farm' => $farm]);
+        $current = $this->cowRepository->count(['farm' => $farm, 'slaughter' => null]);
 
         if ($value->getId()) {
             $current--;
