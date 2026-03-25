@@ -26,7 +26,7 @@
                         {% for cow in cows %}
                             <tr>
                                 <td><strong>{{ cow.code }}</strong></td>
-                                <td><span class="badge-farm">{{ cow.farm.name }}</span></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
                                 <td>{{ cow.birthdate|date('d/m/Y') }}</td>
                                 <td>{{ cow.slaughter|date('d/m/Y') }}</td>
                                 <td class="text-end">

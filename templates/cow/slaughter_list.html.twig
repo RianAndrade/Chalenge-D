@@ -33,7 +33,7 @@
                                 <td>{{ cow.feed|number_format(2, ',', '.') }}</td>
                                 <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
                                 <td>{{ cow.birthdate|date('d/m/Y') }}</td>
-                                <td><span class="badge-farm">{{ cow.farm.name }}</span></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
                                 <td>
                                     <ul class="mb-0 small" style="padding-left:16px;">
                                         {% for reason in cow.slaughterReasons %}
