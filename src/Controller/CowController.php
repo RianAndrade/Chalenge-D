@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Cow;
 use App\Form\CowType;
 use App\Repository\CowRepository;
+use App\Repository\FarmRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,19 @@ class CowController extends AbstractController
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, FarmRepository $farmRepository): Response
     {
-        $search = $request->query->get('search');
-        $query = $this->repository->findBySearch($search);
+        $filters = [
+            'search' => $request->query->get('search'),
+            'farm' => $request->query->get('farm'),
+            'status' => $request->query->get('status'),
+            'milk_min' => $request->query->get('milk_min'),
+            'milk_max' => $request->query->get('milk_max'),
+            'weight_min' => $request->query->get('weight_min'),
+            'weight_max' => $request->query->get('weight_max'),
+        ];
+
+        $query = $this->repository->findByFilters($filters);
 
         $cows = $paginator->paginate(
             $query,
@@ -33,7 +43,8 @@ class CowController extends AbstractController
 
         return $this->render('cow/index.html.twig', [
             'cows' => $cows,
-            'search' => $search,
+            'filters' => $filters,
+            'farms' => $farmRepository->findBy([], ['name' => 'ASC']),
         ]);
     }
 

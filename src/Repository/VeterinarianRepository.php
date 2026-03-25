@@ -48,6 +48,25 @@ class VeterinarianRepository extends ServiceEntityRepository
         return $qb;
     }
 
+    public function findByFilters(array $filters): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->orderBy('v.name', 'ASC');
+
+        if (!empty($filters['search'])) {
+            $qb->andWhere('v.name LIKE :search OR v.crmv LIKE :search')
+                ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        if (!empty($filters['farm'])) {
+            $qb->innerJoin('v.farms', 'f')
+                ->andWhere('f.id = :farmId')
+                ->setParameter('farmId', $filters['farm']);
+        }
+
+        return $qb;
+    }
+
     public function findByCrmv(string $crmv): ?Veterinarian
     {
         return $this->findOneBy(['crmv' => $crmv]);

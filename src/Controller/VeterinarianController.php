@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Veterinarian;
 use App\Form\VeterinarianType;
+use App\Repository\FarmRepository;
 use App\Repository\VeterinarianRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,10 +21,14 @@ class VeterinarianController extends AbstractController
     }
 
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, PaginatorInterface $paginator, FarmRepository $farmRepository): Response
     {
-        $search = $request->query->get('search');
-        $query = $this->repository->findBySearch($search);
+        $filters = [
+            'search' => $request->query->get('search'),
+            'farm' => $request->query->get('farm'),
+        ];
+
+        $query = $this->repository->findByFilters($filters);
 
         $veterinarians = $paginator->paginate(
             $query,
@@ -33,7 +38,8 @@ class VeterinarianController extends AbstractController
 
         return $this->render('veterinarian/index.html.twig', [
             'veterinarians' => $veterinarians,
-            'search' => $search,
+            'filters' => $filters,
+            'farms' => $farmRepository->findBy([], ['name' => 'ASC']),
         ]);
     }
 

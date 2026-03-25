@@ -10,11 +10,49 @@
         add_button_path: path('app_farm_create')
     } %}
 
-    {% include '_partials/_search_bar.html.twig' with {
-        search: search,
-        placeholder: 'Buscar por nome ou responsável...',
-        clear_path: path('app_farm_index')
-    } %}
+    <div class="content-card mb-4">
+        <div class="p-3 border-bottom" style="background: var(--bg-alt);">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-funnel" style="color: var(--primary);"></i>
+                <strong style="font-size: 14px;">Filtros</strong>
+            </div>
+        </div>
+        <div class="p-3">
+            <form method="get" action="{{ path('app_farm_index') }}">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">Busca</label>
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Nome ou responsável..." value="{{ filters.search }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Veterinário</label>
+                        <select name="veterinarian" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            {% for vet in veterinarians %}
+                                <option value="{{ vet.id }}" {{ filters.veterinarian == vet.id ? 'selected' }}>{{ vet.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tamanho min (HA)</label>
+                        <input type="number" step="0.01" name="size_min" class="form-control form-control-sm" value="{{ filters.size_min }}" placeholder="0">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Tamanho max (HA)</label>
+                        <input type="number" step="0.01" name="size_max" class="form-control form-control-sm" value="{{ filters.size_max }}" placeholder="999">
+                    </div>
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn-primary-custom btn-sm">
+                            <i class="bi bi-funnel"></i> Filtrar
+                        </button>
+                        <a href="{{ path('app_farm_index') }}" class="btn-secondary-custom btn-sm">
+                            <i class="bi bi-x-lg"></i> Limpar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     {% if farms|length > 0 %}
         <div class="content-card">

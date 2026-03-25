@@ -81,6 +81,53 @@ class CowRepository extends ServiceEntityRepository
         return $qb;
     }
 
+    public function findByFilters(array $filters): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->orderBy('c.code', 'ASC');
+
+        if (!empty($filters['search'])) {
+            $qb->andWhere('c.code LIKE :search OR f.name LIKE :search')
+                ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        if (!empty($filters['farm'])) {
+            $qb->andWhere('f.id = :farmId')
+                ->setParameter('farmId', $filters['farm']);
+        }
+
+        if (isset($filters['status']) && $filters['status'] !== '') {
+            if ($filters['status'] === 'alive') {
+                $qb->andWhere('c.slaughter IS NULL');
+            } elseif ($filters['status'] === 'slaughtered') {
+                $qb->andWhere('c.slaughter IS NOT NULL');
+            }
+        }
+
+        if (isset($filters['milk_min']) && $filters['milk_min'] !== '') {
+            $qb->andWhere('c.milk >= :milkMin')
+                ->setParameter('milkMin', (float) $filters['milk_min']);
+        }
+
+        if (isset($filters['milk_max']) && $filters['milk_max'] !== '') {
+            $qb->andWhere('c.milk <= :milkMax')
+                ->setParameter('milkMax', (float) $filters['milk_max']);
+        }
+
+        if (isset($filters['weight_min']) && $filters['weight_min'] !== '') {
+            $qb->andWhere('c.weight >= :weightMin')
+                ->setParameter('weightMin', (float) $filters['weight_min']);
+        }
+
+        if (isset($filters['weight_max']) && $filters['weight_max'] !== '') {
+            $qb->andWhere('c.weight <= :weightMax')
+                ->setParameter('weightMax', (float) $filters['weight_max']);
+        }
+
+        return $qb;
+    }
+
     public function getTotalMilkPerWeek(): float
     {
         $result = $this->createQueryBuilder('c')

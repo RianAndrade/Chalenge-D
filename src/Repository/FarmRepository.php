@@ -48,6 +48,35 @@ class FarmRepository extends ServiceEntityRepository
         return $qb;
     }
 
+    public function findByFilters(array $filters): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->orderBy('f.name', 'ASC');
+
+        if (!empty($filters['search'])) {
+            $qb->andWhere('f.name LIKE :search OR f.manager LIKE :search')
+                ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        if (isset($filters['size_min']) && $filters['size_min'] !== '') {
+            $qb->andWhere('f.size >= :sizeMin')
+                ->setParameter('sizeMin', (float) $filters['size_min']);
+        }
+
+        if (isset($filters['size_max']) && $filters['size_max'] !== '') {
+            $qb->andWhere('f.size <= :sizeMax')
+                ->setParameter('sizeMax', (float) $filters['size_max']);
+        }
+
+        if (!empty($filters['veterinarian'])) {
+            $qb->innerJoin('f.veterinarians', 'v')
+                ->andWhere('v.id = :vetId')
+                ->setParameter('vetId', $filters['veterinarian']);
+        }
+
+        return $qb;
+    }
+
     public function findByManager(string $manager): array
     {
         return $this->createQueryBuilder('f')
