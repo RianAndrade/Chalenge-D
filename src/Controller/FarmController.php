@@ -80,7 +80,7 @@ class FarmController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $animals = $cowRepository->count(['farm' => $farm]);
+            $animals = $cowRepository->count(['farm' => $farm, 'slaughter' => null]);
             $limit = (int) floor($farm->getSize() * Farm::MAX_ANIMALS_PER_HECTARE);
 
             if ($animals > $limit) {
