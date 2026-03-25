@@ -60,5 +60,13 @@
             <i class="bi bi-journal-text"></i>
             <span>Abatidos</span>
         </a>
+        {% if app.environment == 'dev' %}
+        <div class="sidebar-section">Desenvolvimento</div>
+
+        <a href="{{ path('app_dev_index') }}" class="sidebar-item {{ app.request.attributes.get('_route') starts with 'app_dev' ? 'active' }}">
+            <i class="bi bi-wrench-adjustable"></i>
+            <span>Dev Tools</span>
+        </a>
+        {% endif %}
     </nav>
 </aside>
