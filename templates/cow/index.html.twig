@@ -3,62 +3,65 @@
 {% block title %}Gados{% endblock %}
 
 {% block body %}
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>Gados</h1>
-        <a href="{{ path('app_cow_create') }}" class="btn btn-primary">Novo Gado</a>
-    </div>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Gados',
+        subtitle: 'Gerencie o rebanho',
+        add_button_label: 'Novo Gado',
+        add_button_path: path('app_cow_create')
+    } %}
 
-    <form method="get" class="mb-3">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Buscar por código ou fazenda..." value="{{ search }}">
-            <button type="submit" class="btn btn-outline-secondary">Buscar</button>
-            {% if search %}
-                <a href="{{ path('app_cow_index') }}" class="btn btn-outline-danger">Limpar</a>
-            {% endif %}
-        </div>
-    </form>
+    {% include '_partials/_search_bar.html.twig' with {
+        search: search,
+        placeholder: 'Buscar por código ou fazenda...',
+        clear_path: path('app_cow_index')
+    } %}
 
     {% if cows|length > 0 %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>{{ knp_pagination_sortable(cows, 'Código', 'c.code') }}</th>
-                        <th>{{ knp_pagination_sortable(cows, 'Leite (L/sem)', 'c.milk') }}</th>
-                        <th>{{ knp_pagination_sortable(cows, 'Ração (kg/sem)', 'c.feed') }}</th>
-                        <th>{{ knp_pagination_sortable(cows, 'Peso (kg)', 'c.weight') }}</th>
-                        <th>{{ knp_pagination_sortable(cows, 'Nascimento', 'c.birthdate') }}</th>
-                        <th>Fazenda</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cow in cows %}
+        <div class="content-card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ cow.code }}</td>
-                            <td>{{ cow.milk|number_format(2, ',', '.') }}</td>
-                            <td>{{ cow.feed|number_format(2, ',', '.') }}</td>
-                            <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
-                            <td>{{ cow.birthdate|date('d/m/Y') }}</td>
-                            <td>{{ cow.farm.name }}</td>
-                            <td class="text-end">
-                                <a href="{{ path('app_cow_show', {id: cow.id}) }}" class="btn btn-sm btn-info">Ver</a>
-                                <a href="{{ path('app_cow_edit', {id: cow.id}) }}" class="btn btn-sm btn-warning">Editar</a>
-                                <form method="post" action="{{ path('app_cow_delete', {id: cow.id}) }}" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir?')">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cow.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                </form>
-                            </td>
+                            <th>{{ knp_pagination_sortable(cows, 'Código', 'c.code') }}</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Leite (L/sem)', 'c.milk') }}</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Ração (kg/sem)', 'c.feed') }}</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Peso (kg)', 'c.weight') }}</th>
+                            <th>{{ knp_pagination_sortable(cows, 'Nascimento', 'c.birthdate') }}</th>
+                            <th>Fazenda</th>
+                            <th class="text-end">Ações</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="d-flex justify-content-center">
-            {{ knp_pagination_render(cows) }}
+                    </thead>
+                    <tbody>
+                        {% for cow in cows %}
+                            <tr>
+                                <td><strong>{{ cow.code }}</strong></td>
+                                <td>{{ cow.milk|number_format(2, ',', '.') }}</td>
+                                <td>{{ cow.feed|number_format(2, ',', '.') }}</td>
+                                <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
+                                <td>{{ cow.birthdate|date('d/m/Y') }}</td>
+                                <td><span class="badge-farm">{{ cow.farm.name }}</span></td>
+                                <td>
+                                    {% include '_partials/_action_buttons.html.twig' with {
+                                        show_path: path('app_cow_show', {id: cow.id}),
+                                        edit_path: path('app_cow_edit', {id: cow.id}),
+                                        delete_path: path('app_cow_delete', {id: cow.id}),
+                                        delete_token: csrf_token('delete' ~ cow.id)
+                                    } %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination-wrapper">
+                <div></div>
+                {{ knp_pagination_render(cows) }}
+            </div>
         </div>
     {% else %}
-        <div class="alert alert-info">Nenhum gado encontrado.</div>
+        <div class="content-card empty-state">
+            <i class="bi bi-tags"></i>
+            <p>Nenhum gado encontrado.</p>
+        </div>
     {% endif %}
 {% endblock %}

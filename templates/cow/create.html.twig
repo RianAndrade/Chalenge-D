@@ -3,7 +3,13 @@
 {% block title %}Novo Gado{% endblock %}
 
 {% block body %}
-    <h1>Novo Gado</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Novo Gado',
+        subtitle: 'Cadastrar novo animal',
+        back_button_path: path('app_cow_index')
+    } %}
 
-    {% include 'cow/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    <div class="form-card">
+        {% include 'cow/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    </div>
 {% endblock %}
