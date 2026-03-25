@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gado - {{ cow.code }}{% endblock %}
+
+{% block body %}
+    <h1>Gado {{ cow.code }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Código</th>
+                <td>{{ cow.code }}</td>
+            </tr>
+            <tr>
+                <th>Leite</th>
+                <td>{{ cow.milk|number_format(2, ',', '.') }} litros/semana</td>
+            </tr>
+            <tr>
+                <th>Ração</th>
+                <td>{{ cow.feed|number_format(2, ',', '.') }} kg/semana</td>
+            </tr>
+            <tr>
+                <th>Peso</th>
+                <td>{{ cow.weight|number_format(2, ',', '.') }} kg</td>
+            </tr>
+            <tr>
+                <th>Nascimento</th>
+                <td>{{ cow.birthdate|date('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <th>Fazenda</th>
+                <td>
+                    <a href="{{ path('app_farm_show', {id: cow.farm.id}) }}">{{ cow.farm.name }}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_cow_edit', {id: cow.id}) }}" class="btn btn-warning">Editar</a>
+        <a href="{{ path('app_cow_index') }}" class="btn btn-secondary">Voltar</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Novo Gado{% endblock %}
+
+{% block body %}
+    <h1>Novo Gado</h1>
+
+    {% include 'cow/_form.html.twig' with {button_label: 'Cadastrar'} %}
+{% endblock %}

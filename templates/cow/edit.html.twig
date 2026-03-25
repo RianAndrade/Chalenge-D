@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Gado - {{ cow.code }}{% endblock %}
+
+{% block body %}
+    <h1>Editar Gado</h1>
+
+    {% include 'cow/_form.html.twig' with {button_label: 'Atualizar'} %}
+{% endblock %}

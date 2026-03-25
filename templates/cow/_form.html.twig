@@ -1,0 +1,54 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="mb-3">
+        {{ form_label(form.code, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.code, {'attr': {'class': 'form-control' ~ (form.code.vars.errors|length ? ' is-invalid' : '')}}) }}
+        {% for error in form.code.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.milk, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.milk, {'attr': {'class': 'form-control' ~ (form.milk.vars.errors|length ? ' is-invalid' : '')}}) }}
+        {% for error in form.milk.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.feed, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.feed, {'attr': {'class': 'form-control' ~ (form.feed.vars.errors|length ? ' is-invalid' : '')}}) }}
+        {% for error in form.feed.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.weight, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.weight, {'attr': {'class': 'form-control' ~ (form.weight.vars.errors|length ? ' is-invalid' : '')}}) }}
+        {% for error in form.weight.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.birthdate, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.birthdate, {'attr': {'class': 'form-control' ~ (form.birthdate.vars.errors|length ? ' is-invalid' : '')}}) }}
+        {% for error in form.birthdate.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.farm, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.farm) }}
+        {% for error in form.farm.vars.errors %}
+            <div class="invalid-feedback d-block form-error-message">{{ error.message }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">{{ button_label|default('Salvar') }}</button>
+        <a href="{{ path('app_cow_index') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+{{ form_end(form) }}
