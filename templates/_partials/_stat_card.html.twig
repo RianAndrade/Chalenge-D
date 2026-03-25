@@ -16,11 +16,6 @@
     {% if footer is defined and footer %}
         <div class="stat-card-footer">{{ footer }}</div>
     {% endif %}
-    {% if bar_color is defined %}
-        <div class="stat-card-bar">
-            <div class="stat-card-bar-fill" style="width: {{ bar_width|default('50') }}%; background: {{ bar_color }};"></div>
-        </div>
-    {% endif %}
     {% if report_path is defined and report_path %}
         <a href="{{ report_path }}" class="stat-card-report-link">
             <i class="bi bi-bar-chart-line"></i> Ver relatório completo
