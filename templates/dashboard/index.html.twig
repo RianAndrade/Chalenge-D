@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Início - Fazenda Bovina{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Relatórios Semanais</h1>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Leite Produzido</h5>
+                    <p class="card-text display-6">{{ totalMilk|number_format(2, ',', '.') }} L</p>
+                </div>
+                <div class="card-footer">
+                    Total por semana (animais vivos)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Ração Necessária</h5>
+                    <p class="card-text display-6">{{ totalFeed|number_format(2, ',', '.') }} Kg</p>
+                </div>
+                <div class="card-footer">
+                    Total por semana (animais vivos)
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Animais Jovens com Alta Ração</h5>
+                    <p class="card-text display-6">{{ youngHighFeedCount }}</p>
+                </div>
+                <div class="card-footer">
+                    Até 1 ano de idade e mais de 500Kg de ração/semana
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

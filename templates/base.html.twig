@@ -14,12 +14,15 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
             <div class="container">
-                <a class="navbar-brand" href="{{ path('app_veterinarian_index') }}">Fazenda Bovina</a>
+                <a class="navbar-brand" href="{{ path('app_dashboard') }}">Fazenda Bovina</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_dashboard') }}">Início</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_veterinarian_index') }}">Veterinários</a>
                         </li>
@@ -28,6 +31,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_cow_index') }}">Gados</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_cow_slaughter_list') }}">Abate</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_cow_slaughter_report') }}">Abatidos</a>
                         </li>
                     </ul>
                 </div>
