@@ -150,14 +150,14 @@
     letter-spacing: 0.5px;
     padding: 14px 20px;
     width: 180px;
-    border-bottom: 1px solid #f0ede8;
+    border-bottom: 1px solid var(--border);
 }
 
 .detail-card .table td {
     padding: 14px 20px;
     font-size: 14px;
     color: var(--text-primary);
-    border-bottom: 1px solid #f0ede8;
+    border-bottom: 1px solid var(--border);
 }
 
 /* ---- Action Buttons ---- */

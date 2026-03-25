@@ -25,3 +25,20 @@
     --radius-sm: 8px;
     --radius-xs: 6px;
 }
+
+/* ---- Dark Theme ---- */
+[data-theme="dark"] {
+    --sidebar-bg: #0e1520;
+    --sidebar-hover: #1a2a3e;
+    --primary-light: rgba(61, 139, 94, 0.18);
+    --accent-light: rgba(193, 123, 58, 0.15);
+    --bg: #121820;
+    --bg-alt: #1a2230;
+    --card-bg: #1e2a38;
+    --border: #2a3a4e;
+    --text-primary: #e0e6ed;
+    --text-secondary: #8a96a6;
+    --text-muted: #6b7a8e;
+    --text-sidebar: #5a6a7e;
+    --danger-light: rgba(229, 62, 62, 0.12);
+}
