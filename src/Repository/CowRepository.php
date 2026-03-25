@@ -50,6 +50,23 @@ class CowRepository extends ServiceEntityRepository
         return $qb->setMaxResults(1)->getQuery()->getOneOrNullResult();
     }
 
+    public function findEligibleForSlaughter(): QueryBuilder
+    {
+        $fiveYearsAgo = new \DateTime('-5 years');
+
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->where('c.slaughter IS NULL')
+            ->andWhere(
+                'c.birthdate < :fiveYearsAgo OR ' .
+                'c.milk < 40 OR ' .
+                '(c.milk < 70 AND c.feed / 7 > 50) OR ' .
+                'c.weight / 15 > 18'
+            )
+            ->setParameter('fiveYearsAgo', $fiveYearsAgo)
+            ->orderBy('c.code', 'ASC');
+    }
+
     public function findBySearch(?string $search): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
@@ -62,5 +79,51 @@ class CowRepository extends ServiceEntityRepository
         }
 
         return $qb;
+    }
+
+    public function getTotalMilkPerWeek(): float
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('COALESCE(SUM(c.milk), 0)')
+            ->where('c.slaughter IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (float) $result;
+    }
+
+    public function getTotalFeedPerWeek(): float
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('COALESCE(SUM(c.feed), 0)')
+            ->where('c.slaughter IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (float) $result;
+    }
+
+    public function countYoungHighFeedCows(): int
+    {
+        $oneYearAgo = new \DateTime('-1 year');
+
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.slaughter IS NULL')
+            ->andWhere('c.birthdate >= :oneYearAgo')
+            ->andWhere('c.feed > 500')
+            ->setParameter('oneYearAgo', $oneYearAgo)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int) $result;
+    }
+
+    public function findSlaughtered(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.farm', 'f')
+            ->where('c.slaughter IS NOT NULL')
+            ->orderBy('c.slaughter', 'DESC');
     }
 }

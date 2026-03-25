@@ -145,4 +145,72 @@ class Cow
     {
         return $this->slaughter === null;
     }
+
+    public function getAgeInYears(): float
+    {
+        if (!$this->birthdate) {
+            return 0;
+        }
+
+        return $this->birthdate->diff(new \DateTime())->y
+            + $this->birthdate->diff(new \DateTime())->m / 12;
+    }
+
+    public function getDailyFeed(): float
+    {
+        return $this->feed ? $this->feed / 7 : 0;
+    }
+
+    public function getWeightInArrobas(): float
+    {
+        return $this->weight ? $this->weight / 15 : 0;
+    }
+
+    public function isEligibleForSlaughter(): bool
+    {
+        if (!$this->isAlive()) {
+            return false;
+        }
+
+        if ($this->getAgeInYears() > 5) {
+            return true;
+        }
+
+        if ($this->milk !== null && $this->milk < 40) {
+            return true;
+        }
+
+        if ($this->milk !== null && $this->milk < 70 && $this->getDailyFeed() > 50) {
+            return true;
+        }
+
+        if ($this->getWeightInArrobas() > 18) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getSlaughterReasons(): array
+    {
+        $reasons = [];
+
+        if ($this->getAgeInYears() > 5) {
+            $reasons[] = 'Mais de 5 anos de idade';
+        }
+
+        if ($this->milk !== null && $this->milk < 40) {
+            $reasons[] = 'Produz menos de 40 litros de leite por semana';
+        }
+
+        if ($this->milk !== null && $this->milk < 70 && $this->getDailyFeed() > 50) {
+            $reasons[] = 'Produz menos de 70L/sem e consome mais de 50kg de ração/dia';
+        }
+
+        if ($this->getWeightInArrobas() > 18) {
+            $reasons[] = 'Peso maior que 18 arrobas';
+        }
+
+        return $reasons;
+    }
 }
