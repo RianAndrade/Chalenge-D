@@ -1,0 +1,38 @@
+services:
+  php-test:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: challange-d-php-test
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+    environment:
+      APP_ENV: test
+      DATABASE_URL: mysql://app:app@mysql-test:3306/challange_d_test?serverVersion=8.0
+    networks:
+      - test-network
+
+  mysql-test:
+    image: mysql:8.0
+    container_name: challange-d-mysql-test
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: challange_d_test
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
