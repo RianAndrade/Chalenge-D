@@ -141,6 +141,8 @@ class CowController extends AbstractController
     public function slaughter(Request $request, Cow $cow): Response
     {
         if (!$this->isCsrfTokenValid('slaughter' . $cow->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token inválido, tente novamente.');
+
             return $this->redirectToRoute('app_cow_slaughter_list');
         }
 
@@ -161,6 +163,8 @@ class CowController extends AbstractController
     public function revertSlaughter(Request $request, Cow $cow): Response
     {
         if (!$this->isCsrfTokenValid('revert_slaughter' . $cow->getId(), $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token inválido, tente novamente.');
+
             return $this->redirectToRoute('app_cow_slaughter_report');
         }
 
