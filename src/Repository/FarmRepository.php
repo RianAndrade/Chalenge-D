@@ -35,19 +35,6 @@ class FarmRepository extends ServiceEntityRepository
         }
     }
 
-    public function findBySearch(?string $search): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('f')
-            ->orderBy('f.name', 'ASC');
-
-        if ($search) {
-            $qb->where('f.name LIKE :search OR f.manager LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
-        }
-
-        return $qb;
-    }
-
     public function findByFilters(array $filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('f')

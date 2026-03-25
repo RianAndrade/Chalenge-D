@@ -35,19 +35,6 @@ class VeterinarianRepository extends ServiceEntityRepository
         }
     }
 
-    public function findBySearch(?string $search): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('v')
-            ->orderBy('v.name', 'ASC');
-
-        if ($search) {
-            $qb->where('v.name LIKE :search OR v.crmv LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
-        }
-
-        return $qb;
-    }
-
     public function findByFilters(array $filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('v')

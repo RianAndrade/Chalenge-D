@@ -67,20 +67,6 @@ class CowRepository extends ServiceEntityRepository
             ->orderBy('c.code', 'ASC');
     }
 
-    public function findBySearch(?string $search): QueryBuilder
-    {
-        $qb = $this->createQueryBuilder('c')
-            ->leftJoin('c.farm', 'f')
-            ->orderBy('c.code', 'ASC');
-
-        if ($search) {
-            $qb->where('c.code LIKE :search OR f.name LIKE :search')
-                ->setParameter('search', '%' . $search . '%');
-        }
-
-        return $qb;
-    }
-
     public function findByFilters(array $filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
