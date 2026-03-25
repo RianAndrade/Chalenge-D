@@ -93,7 +93,7 @@
                                 <td>{{ cow.feed|number_format(2, ',', '.') }}</td>
                                 <td>{{ cow.weight|number_format(2, ',', '.') }}</td>
                                 <td>{{ cow.birthdate|date('d/m/Y') }}</td>
-                                <td><span class="badge-farm">{{ cow.farm.name }}</span></td>
+                                <td><span class="badge-farm">{{ cow.farm ? cow.farm.name : '—' }}</span></td>
                                 <td>
                                     {% include '_partials/_action_buttons.html.twig' with {
                                         show_path: path('app_cow_show', {id: cow.id}),

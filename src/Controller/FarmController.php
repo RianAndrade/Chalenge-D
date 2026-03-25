@@ -7,6 +7,7 @@ use App\Form\FarmType;
 use App\Repository\CowRepository;
 use App\Repository\FarmRepository;
 use App\Repository\VeterinarianRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +75,7 @@ class FarmController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Farm $farm, CowRepository $cowRepository): Response
+    public function edit(Request $request, Farm $farm, CowRepository $cowRepository, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(FarmType::class, $farm);
         $form->handleRequest($request);
@@ -84,12 +85,10 @@ class FarmController extends AbstractController
             $limit = (int) floor($farm->getSize() * Farm::MAX_ANIMALS_PER_HECTARE);
 
             if ($animals > $limit) {
-                $this->addFlash('error', "O tamanho não pode ser reduzido: a fazenda possui {$animals} animais, mas o novo tamanho comporta apenas {$limit}.");
+                $this->addFlash('error', "O tamanho não pode ser reduzido: a fazenda possui {$animals} animais vivos, mas o novo tamanho comporta apenas {$limit}.");
+                $em->refresh($farm);
 
-                return $this->render('farm/edit.html.twig', [
-                    'farm' => $farm,
-                    'form' => $form,
-                ]);
+                return $this->redirectToRoute('app_farm_edit', ['id' => $farm->getId()]);
             }
 
             $this->repository->save($farm, true);

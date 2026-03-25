@@ -61,8 +61,8 @@ class CowRepository extends ServiceEntityRepository
             ->andWhere(
                 'c.birthdate < :fiveYearsAgo OR ' .
                 'c.milk < 40 OR ' .
-                '(c.milk < 70 AND c.feed / 7 > 50) OR ' .
-                'c.weight / 15 > 18'
+                '(c.milk < 70 AND (c.feed * 1.0) / 7 > 50) OR ' .
+                '(c.weight * 1.0) / 15 > 18'
             )
             ->setParameter('fiveYearsAgo', $fiveYearsAgo)
             ->orderBy('c.code', 'ASC');
@@ -194,10 +194,10 @@ class CowRepository extends ServiceEntityRepository
      */
     public function getTotalFeedPerFarm(): array
     {
-        return $this->createQueryBuilder('c')
+        return $this->getEntityManager()->createQueryBuilder()
             ->select('f.name AS farmName, COALESCE(SUM(c.feed), 0) AS totalFeed')
-            ->leftJoin('c.farm', 'f')
-            ->where('c.slaughter IS NULL')
+            ->from(\App\Entity\Farm::class, 'f')
+            ->leftJoin(\App\Entity\Cow::class, 'c', 'WITH', 'c.farm = f AND c.slaughter IS NULL')
             ->groupBy('f.id')
             ->orderBy('totalFeed', 'DESC')
             ->getQuery()

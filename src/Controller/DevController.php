@@ -28,6 +28,32 @@ class DevController extends AbstractController
         ]);
     }
 
+    #[Route('/reset', name: 'app_dev_reset', methods: ['POST'])]
+    public function reset(Request $request, EntityManagerInterface $em): Response
+    {
+        if ($this->getParameter('kernel.environment') !== 'dev') {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$this->isCsrfTokenValid('reset', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token CSRF inválido.');
+
+            return $this->redirectToRoute('app_dev_index');
+        }
+
+        $connection = $em->getConnection();
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+        $connection->executeStatement('TRUNCATE TABLE cow');
+        $connection->executeStatement('TRUNCATE TABLE farm_veterinarian');
+        $connection->executeStatement('TRUNCATE TABLE farm');
+        $connection->executeStatement('TRUNCATE TABLE veterinarian');
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+
+        $this->addFlash('success', 'Banco de dados resetado com sucesso.');
+
+        return $this->redirectToRoute('app_dev_index');
+    }
+
     #[Route('/seed', name: 'app_dev_seed', methods: ['POST'])]
     public function seed(Request $request, EntityManagerInterface $em): Response
     {
@@ -41,21 +67,43 @@ class DevController extends AbstractController
             return $this->redirectToRoute('app_dev_index');
         }
 
+        $vetNames = [
+            'Dr. Carlos Mendes', 'Dra. Ana Beatriz', 'Dr. Roberto Lima',
+            'Dra. Fernanda Costa', 'Dr. João Pereira', 'Dra. Mariana Souza',
+            'Dr. Pedro Alves', 'Dra. Juliana Rocha', 'Dr. Lucas Ferreira',
+            'Dra. Camila Ribeiro',
+        ];
+
+        $vetCrmvs = [
+            'CRMV-SP 12345', 'CRMV-MG 23456', 'CRMV-GO 34567',
+            'CRMV-MT 45678', 'CRMV-MS 56789', 'CRMV-PR 67890',
+            'CRMV-BA 78901', 'CRMV-RS 89012', 'CRMV-TO 90123',
+            'CRMV-PA 01234',
+        ];
+
         $veterinarians = [];
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $vet = new Veterinarian();
-            $vet->setName('Veterinário ' . uniqid());
-            $vet->setCrmv('CRMV-' . strtoupper(uniqid()));
+            $vet->setName($vetNames[$i]);
+            $vet->setCrmv($vetCrmvs[$i]);
             $em->persist($vet);
             $veterinarians[] = $vet;
         }
 
+        $farmData = [
+            ['Fazenda Boa Esperança', 45.0, 'José Antônio Silva'],
+            ['Fazenda Santa Maria', 78.5, 'Maria Helena Santos'],
+            ['Fazenda São Jorge', 32.0, 'Jorge Luiz Oliveira'],
+            ['Fazenda Primavera', 120.0, 'Ana Paula Ferreira'],
+            ['Fazenda Serra Bonita', 55.0, 'Carlos Eduardo Lima'],
+        ];
+
         $farms = [];
-        for ($i = 1; $i <= 5; $i++) {
+        foreach ($farmData as $i => [$name, $size, $manager]) {
             $farm = new Farm();
-            $farm->setName('Fazenda ' . uniqid());
-            $farm->setSize(rand(10, 100));
-            $farm->setManager('Gerente ' . $i);
+            $farm->setName($name);
+            $farm->setSize($size);
+            $farm->setManager($manager);
 
             $assignedVets = array_rand($veterinarians, rand(1, 3));
             if (!is_array($assignedVets)) {
@@ -69,9 +117,11 @@ class DevController extends AbstractController
             $farms[] = $farm;
         }
 
+        $breeds = ['NL', 'GR', 'HO', 'JE', 'AN', 'BR', 'SI', 'GU'];
         for ($i = 1; $i <= 100; $i++) {
             $cow = new Cow();
-            $cow->setCode('COW-' . strtoupper(uniqid()));
+            $breed = $breeds[array_rand($breeds)];
+            $cow->setCode(sprintf('%s-%03d', $breed, $i));
             $cow->setMilk(rand(10, 200) / 1.0);
             $cow->setFeed(rand(50, 500) / 1.0);
             $cow->setWeight(rand(150, 600) / 1.0);
@@ -82,7 +132,7 @@ class DevController extends AbstractController
 
         $em->flush();
 
-        $this->addFlash('success', 'Seeds criadas: 10 veterinários, 5 fazendas e 100 vacas.');
+        $this->addFlash('success', 'Seeds criadas: 10 veterinários, 5 fazendas e 100 gados.');
 
         return $this->redirectToRoute('app_dev_index');
     }

@@ -23,17 +23,17 @@ class CowType extends AbstractType
             ])
             ->add('milk', NumberType::class, [
                 'label' => 'Leite (litros/semana)',
-                'attr' => ['placeholder' => 'Litros de leite por semana'],
+                'attr' => ['placeholder' => 'Litros de leite por semana', 'min' => 0, 'max' => 10000, 'step' => '0.01'],
                 'invalid_message' => 'Informe um valor numérico válido.',
             ])
             ->add('feed', NumberType::class, [
                 'label' => 'Ração (kg/semana)',
-                'attr' => ['placeholder' => 'Quilos de ração por semana'],
+                'attr' => ['placeholder' => 'Quilos de ração por semana', 'min' => 0.01, 'max' => 10000, 'step' => '0.01'],
                 'invalid_message' => 'Informe um valor numérico válido.',
             ])
             ->add('weight', NumberType::class, [
                 'label' => 'Peso (kg)',
-                'attr' => ['placeholder' => 'Peso do animal em quilos'],
+                'attr' => ['placeholder' => 'Peso do animal em quilos', 'min' => 0.01, 'max' => 5000, 'step' => '0.01'],
                 'invalid_message' => 'Informe um valor numérico válido.',
             ])
             ->add('birthdate', DateType::class, [

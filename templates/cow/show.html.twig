@@ -36,7 +36,11 @@
                 <tr>
                     <th>Fazenda</th>
                     <td>
-                        <a href="{{ path('app_farm_show', {id: cow.farm.id}) }}" class="badge-farm text-decoration-none">{{ cow.farm.name }}</a>
+                        {% if cow.farm %}
+                            <a href="{{ path('app_farm_show', {id: cow.farm.id}) }}" class="badge-farm text-decoration-none">{{ cow.farm.name }}</a>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
                     </td>
                 </tr>
             </tbody>

@@ -22,7 +22,7 @@ class FarmType extends AbstractType
             ])
             ->add('size', NumberType::class, [
                 'label' => 'Tamanho (HA)',
-                'attr' => ['placeholder' => 'Tamanho em hectares'],
+                'attr' => ['placeholder' => 'Tamanho em hectares', 'min' => 0.01, 'step' => '0.01'],
                 'invalid_message' => 'Informe um valor numérico válido para o tamanho.',
             ])
             ->add('manager', TextType::class, [
