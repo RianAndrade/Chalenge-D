@@ -6,7 +6,6 @@ use App\Entity\Cow;
 use App\Form\CowType;
 use App\Repository\CowRepository;
 use App\Repository\FarmRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,10 +27,10 @@ class CowController extends AbstractController
             'search' => $request->query->get('search'),
             'farm' => $request->query->get('farm'),
             'status' => $request->query->get('status'),
-            'milk_min' => max(0, (float) $request->query->get('milk_min', 0)) ?: null,
-            'milk_max' => max(0, (float) $request->query->get('milk_max', 0)) ?: null,
-            'weight_min' => max(0, (float) $request->query->get('weight_min', 0)) ?: null,
-            'weight_max' => max(0, (float) $request->query->get('weight_max', 0)) ?: null,
+            'milk_min' => $this->parseNonNegativeFloat($request->query->get('milk_min')),
+            'milk_max' => $this->parseNonNegativeFloat($request->query->get('milk_max')),
+            'weight_min' => $this->parseNonNegativeFloat($request->query->get('weight_min')),
+            'weight_max' => $this->parseNonNegativeFloat($request->query->get('weight_max')),
         ];
 
         $query = $this->repository->findByFilters($filters);
@@ -110,6 +109,17 @@ class CowController extends AbstractController
         return $this->redirectToRoute('app_cow_index');
     }
 
+    private function parseNonNegativeFloat(?string $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $float = (float) $value;
+
+        return $float >= 0 ? $float : null;
+    }
+
     #[Route('/slaughter/report', name: 'slaughter_report', methods: ['GET'], priority: 1)]
     public function slaughterReport(Request $request, PaginatorInterface $paginator): Response
     {
@@ -171,7 +181,7 @@ class CowController extends AbstractController
     }
 
     #[Route('/{id}/revert-slaughter', name: 'revert_slaughter', methods: ['POST'], priority: 1)]
-    public function revertSlaughter(Request $request, Cow $cow, EntityManagerInterface $em): Response
+    public function revertSlaughter(Request $request, Cow $cow): Response
     {
         if (!$this->isCsrfTokenValid('revert_slaughter' . $cow->getId(), $request->request->get('_token'))) {
             $this->addFlash('error', 'Token inválido, tente novamente.');
@@ -185,31 +195,29 @@ class CowController extends AbstractController
             return $this->redirectToRoute('app_cow_slaughter_report');
         }
 
-        return $em->wrapInTransaction(function () use ($cow) {
-            $existing = $this->repository->findOneAliveByCodeExcluding($cow->getCode(), $cow->getId());
-            if ($existing) {
-                $this->addFlash('error', 'Não é possível reverter: já existe um animal vivo com o código "' . $cow->getCode() . '".');
+        $existing = $this->repository->findOneAliveByCodeExcluding($cow->getCode(), $cow->getId());
+        if ($existing) {
+            $this->addFlash('error', 'Não é possível reverter: já existe um animal vivo com o código "' . $cow->getCode() . '".');
+
+            return $this->redirectToRoute('app_cow_slaughter_report');
+        }
+
+        $farm = $cow->getFarm();
+        if ($farm) {
+            $aliveCows = $this->repository->count(['farm' => $farm, 'slaughter' => null]);
+            $limit = (int) floor($farm->getSize() * \App\Entity\Farm::MAX_ANIMALS_PER_HECTARE);
+
+            if ($aliveCows >= $limit) {
+                $this->addFlash('error', 'Não é possível reverter: a fazenda "' . $farm->getName() . '" já atingiu a capacidade máxima de ' . $limit . ' animais.');
 
                 return $this->redirectToRoute('app_cow_slaughter_report');
             }
+        }
 
-            $farm = $cow->getFarm();
-            if ($farm) {
-                $aliveCows = $this->repository->count(['farm' => $farm, 'slaughter' => null]);
-                $limit = (int) floor($farm->getSize() * \App\Entity\Farm::MAX_ANIMALS_PER_HECTARE);
+        $cow->setSlaughter(null);
+        $this->repository->save($cow, true);
+        $this->addFlash('success', 'Abate revertido com sucesso. O animal voltou ao rebanho.');
 
-                if ($aliveCows >= $limit) {
-                    $this->addFlash('error', 'Não é possível reverter: a fazenda "' . $farm->getName() . '" já atingiu a capacidade máxima de ' . $limit . ' animais.');
-
-                    return $this->redirectToRoute('app_cow_slaughter_report');
-                }
-            }
-
-            $cow->setSlaughter(null);
-            $this->repository->save($cow, true);
-            $this->addFlash('success', 'Abate revertido com sucesso. O animal voltou ao rebanho.');
-
-            return $this->redirectToRoute('app_cow_slaughter_report');
-        });
+        return $this->redirectToRoute('app_cow_slaughter_report');
     }
 }

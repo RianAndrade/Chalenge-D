@@ -107,23 +107,21 @@ class ReportController extends AbstractController
         $milkMin = $this->parsePositiveFloat($request->query->get('milk_min'));
         $milkMax = $this->parsePositiveFloat($request->query->get('milk_max'));
 
-        $cows = $this->cowRepository->findMilkReport($farmId, $milkMin, $milkMax)
-            ->setMaxResults(10000)
-            ->getQuery()
-            ->getResult();
+        $query = $this->cowRepository->findMilkReport($farmId, $milkMin, $milkMax)
+            ->getQuery();
 
-        return $this->createCsvResponse('relatorio_leite.csv', function () use ($cows) {
+        return $this->createCsvResponse('relatorio_leite.csv', function () use ($query) {
             $handle = fopen('php://output', 'w');
             fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
             fputcsv($handle, ['Código', 'Fazenda', 'Nascimento', 'Peso (kg)', 'Leite (L/sem)'], ';');
 
-            foreach ($cows as $cow) {
+            foreach ($query->toIterable() as $cow) {
                 fputcsv($handle, [
                     $cow->getCode(),
                     $cow->getFarm()?->getName() ?? '—',
                     $cow->getBirthdate()?->format('d/m/Y'),
-                    number_format($cow->getWeight(), 2, ',', '.'),
-                    number_format($cow->getMilk(), 2, ',', '.'),
+                    number_format($cow->getWeight() ?? 0, 2, ',', '.'),
+                    number_format($cow->getMilk() ?? 0, 2, ',', '.'),
                 ], ';');
             }
 
@@ -138,22 +136,20 @@ class ReportController extends AbstractController
         $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
         $feedMax = $this->parsePositiveFloat($request->query->get('feed_max'));
 
-        $cows = $this->cowRepository->findFeedReport($farmId, $feedMin, $feedMax)
-            ->setMaxResults(10000)
-            ->getQuery()
-            ->getResult();
+        $query = $this->cowRepository->findFeedReport($farmId, $feedMin, $feedMax)
+            ->getQuery();
 
-        return $this->createCsvResponse('relatorio_racao.csv', function () use ($cows) {
+        return $this->createCsvResponse('relatorio_racao.csv', function () use ($query) {
             $handle = fopen('php://output', 'w');
             fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
             fputcsv($handle, ['Código', 'Fazenda', 'Idade (anos)', 'Ração (kg/sem)', 'Ração Diária (kg)'], ';');
 
-            foreach ($cows as $cow) {
+            foreach ($query->toIterable() as $cow) {
                 fputcsv($handle, [
                     $cow->getCode(),
                     $cow->getFarm()?->getName() ?? '—',
                     number_format($cow->getAgeInYears(), 1, ',', '.'),
-                    number_format($cow->getFeed(), 2, ',', '.'),
+                    number_format($cow->getFeed() ?? 0, 2, ',', '.'),
                     number_format($cow->getDailyFeed(), 2, ',', '.'),
                 ], ';');
             }
@@ -168,26 +164,24 @@ class ReportController extends AbstractController
         $farmId = $request->query->get('farm') ? (int) $request->query->get('farm') : null;
         $feedMin = $this->parsePositiveFloat($request->query->get('feed_min'));
 
-        $cows = $this->cowRepository->findYoungHighFeedReport($farmId, $feedMin)
-            ->setMaxResults(10000)
-            ->getQuery()
-            ->getResult();
+        $query = $this->cowRepository->findYoungHighFeedReport($farmId, $feedMin)
+            ->getQuery();
 
-        return $this->createCsvResponse('relatorio_jovens_alta_racao.csv', function () use ($cows) {
+        return $this->createCsvResponse('relatorio_jovens_alta_racao.csv', function () use ($query) {
             $handle = fopen('php://output', 'w');
             fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
             fputcsv($handle, ['Código', 'Fazenda', 'Nascimento', 'Idade (anos)', 'Peso (kg)', 'Ração (kg/sem)', 'Ração Diária (kg)', 'Leite (L/sem)'], ';');
 
-            foreach ($cows as $cow) {
+            foreach ($query->toIterable() as $cow) {
                 fputcsv($handle, [
                     $cow->getCode(),
                     $cow->getFarm()?->getName() ?? '—',
                     $cow->getBirthdate()?->format('d/m/Y'),
                     number_format($cow->getAgeInYears(), 1, ',', '.'),
-                    number_format($cow->getWeight(), 2, ',', '.'),
-                    number_format($cow->getFeed(), 2, ',', '.'),
+                    number_format($cow->getWeight() ?? 0, 2, ',', '.'),
+                    number_format($cow->getFeed() ?? 0, 2, ',', '.'),
                     number_format($cow->getDailyFeed(), 2, ',', '.'),
-                    number_format($cow->getMilk(), 2, ',', '.'),
+                    number_format($cow->getMilk() ?? 0, 2, ',', '.'),
                 ], ';');
             }
 

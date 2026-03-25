@@ -47,14 +47,14 @@ class FarmRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . $filters['search'] . '%');
         }
 
-        if (isset($filters['size_min']) && $filters['size_min'] !== '') {
+        if (isset($filters['size_min']) && $filters['size_min'] !== null) {
             $qb->andWhere('f.size >= :sizeMin')
-                ->setParameter('sizeMin', (float) $filters['size_min']);
+                ->setParameter('sizeMin', $filters['size_min']);
         }
 
-        if (isset($filters['size_max']) && $filters['size_max'] !== '') {
+        if (isset($filters['size_max']) && $filters['size_max'] !== null) {
             $qb->andWhere('f.size <= :sizeMax')
-                ->setParameter('sizeMax', (float) $filters['size_max']);
+                ->setParameter('sizeMax', $filters['size_max']);
         }
 
         if (isset($filters['veterinarian']) && $filters['veterinarian'] !== '') {

@@ -27,8 +27,8 @@ class FarmController extends AbstractController
     {
         $filters = [
             'search' => $request->query->get('search'),
-            'size_min' => $request->query->get('size_min'),
-            'size_max' => $request->query->get('size_max'),
+            'size_min' => $this->parsePositiveFloat($request->query->get('size_min')),
+            'size_max' => $this->parsePositiveFloat($request->query->get('size_max')),
             'veterinarian' => $request->query->get('veterinarian'),
         ];
 
@@ -45,6 +45,17 @@ class FarmController extends AbstractController
             'filters' => $filters,
             'veterinarians' => $veterinarianRepository->findBy([], ['name' => 'ASC']),
         ]);
+    }
+
+    private function parsePositiveFloat(?string $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $float = (float) $value;
+
+        return $float > 0 ? $float : null;
     }
 
     #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
@@ -112,8 +123,8 @@ class FarmController extends AbstractController
             return $this->redirectToRoute('app_farm_index');
         }
 
-        if ($cowRepository->count(['farm' => $farm]) > 0) {
-            $this->addFlash('error', 'Não é possível remover a fazenda pois ela possui animais cadastrados.');
+        if ($cowRepository->count(['farm' => $farm, 'slaughter' => null]) > 0) {
+            $this->addFlash('error', 'Não é possível remover a fazenda pois ela possui animais vivos.');
 
             return $this->redirectToRoute('app_farm_index');
         }
