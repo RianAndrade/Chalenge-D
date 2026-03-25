@@ -3,7 +3,13 @@
 {% block title %}Nova Fazenda{% endblock %}
 
 {% block body %}
-    <h1>Nova Fazenda</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Nova Fazenda',
+        subtitle: 'Cadastrar nova propriedade',
+        back_button_path: path('app_farm_index')
+    } %}
 
-    {% include 'farm/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    <div class="form-card">
+        {% include 'farm/_form.html.twig' with {button_label: 'Cadastrar'} %}
+    </div>
 {% endblock %}

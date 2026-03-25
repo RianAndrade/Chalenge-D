@@ -3,7 +3,13 @@
 {% block title %}Editar Fazenda - {{ farm.name }}{% endblock %}
 
 {% block body %}
-    <h1>Editar Fazenda</h1>
+    {% include '_partials/_page_header.html.twig' with {
+        title: 'Editar Fazenda',
+        subtitle: 'Alterar dados de ' ~ farm.name,
+        back_button_path: path('app_farm_index')
+    } %}
 
-    {% include 'farm/_form.html.twig' with {button_label: 'Atualizar'} %}
+    <div class="form-card">
+        {% include 'farm/_form.html.twig' with {button_label: 'Atualizar'} %}
+    </div>
 {% endblock %}
