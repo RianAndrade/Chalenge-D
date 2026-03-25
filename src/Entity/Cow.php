@@ -27,16 +27,19 @@ class Cow
     #[ORM\Column]
     #[Assert\NotBlank(message: 'A produção de leite é obrigatória.')]
     #[Assert\PositiveOrZero(message: 'A produção de leite deve ser zero ou maior.')]
+    #[Assert\LessThanOrEqual(value: 10000, message: 'A produção de leite não pode exceder {{ compared_value }} litros.')]
     private ?float $milk = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'A quantidade de ração é obrigatória.')]
     #[Assert\Positive(message: 'A quantidade de ração deve ser maior que zero.')]
+    #[Assert\LessThanOrEqual(value: 10000, message: 'A quantidade de ração não pode exceder {{ compared_value }} kg.')]
     private ?float $feed = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'O peso é obrigatório.')]
     #[Assert\Positive(message: 'O peso deve ser maior que zero.')]
+    #[Assert\LessThanOrEqual(value: 5000, message: 'O peso não pode exceder {{ compared_value }} kg.')]
     private ?float $weight = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
