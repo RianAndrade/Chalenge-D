@@ -20,4 +20,8 @@ WORKDIR /var/www/html
 
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+
 USER www-data
+
+ENTRYPOINT ["entrypoint.sh"]
